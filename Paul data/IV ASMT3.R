@@ -36,10 +36,15 @@ ui <- fluidPage(
   ),
   
   # Main charts
+  # Main charts
   div(style = "float: left; width: 60%;",  # This CSS will make the main content float to the left and occupy 80% width
-      girafeOutput("rankedLgaChart"),
+      div(
+        girafeOutput("rankedLgaChart"),
+        style = "margin-bottom: 20px;"   # Adds a margin to the bottom of the first chart
+      ),
       girafeOutput("interactiveBarChart")
   ),
+  
   
   # Clear float to ensure proper alignment of subsequent elements
   div(style = "clear: both;")

@@ -1,0 +1,463 @@
+﻿Area,2015-16,2016-17,2017-18,2018-19,2019-20,Lga
+Alfredton,9,9.8,10.2,11,11.8,Ballarat
+Ballarat,9.8,9.9,9.8,10.2,10.2,Ballarat
+Ballarat - North,17.1,17.7,18,18.6,18.6,Ballarat
+Ballarat - South,16.1,16.9,17.2,18.3,18.1,Ballarat
+Buninyong,5.2,5.4,5.4,5.6,5.6,Ballarat
+Delacombe,5.2,5.5,5.8,6.6,7.2,Ballarat
+Smythes Creek,3.2,3.3,3.3,3.5,3.4,Ballarat
+Wendouree - Miners Rest,9.1,9.3,9.6,10,10.2,Ballarat
+Bacchus Marsh Region,4.5,4.9,4.9,5,5,Moorabool
+Creswick - Clunes,5.5,5.8,5.7,6,6,Hepburn
+Daylesford,6.7,7.1,7,7.2,7.4,Hepburn
+Gordon (Vic.),4.5,4.8,5,5.1,5,Pyrenees
+Avoca,2.4,2.4,2.5,2.5,2.4,Pyrenees
+Beaufort,2.9,3.1,3.1,3.3,3.3,Pyrenees
+Golden Plains - North,3.1,3.3,3.4,3.6,3.5,Golden Plains
+Maryborough (Vic.),4.3,4.4,4.6,4.6,4.5,Central Goldfields
+Maryborough Region,3.3,3.4,3.5,3.5,3.4,Central Goldfields
+Bendigo,11.2,11,11.2,11.4,11.2,Greater Bendigo
+California Gully - Eaglehawk,8,8.5,8.6,8.9,8.9,Greater Bendigo
+East Bendigo - Kennington,9.7,10.3,10.2,10.6,10.3,Greater Bendigo
+Flora Hill - Spring Gully,6.9,7.2,7.4,7.5,7.4,Greater Bendigo
+Kangaroo Flat - Golden Square,13.6,14.1,14.1,14.5,14.6,Greater Bendigo
+Maiden Gully,4.1,4.1,4.2,4.4,4.5,Greater Bendigo
+Strathfieldsaye,6.8,7.3,7.3,7.8,8,Greater Bendigo
+White Hills - Ascot,9.1,9.8,10.1,10.6,10.7,Greater Bendigo
+Bendigo Region - South,5.4,5.8,5.9,6.2,6.4,Greater Bendigo
+Castlemaine,7.2,7.4,7.3,7.5,7.6,Mount Alexander
+Castlemaine Region,6.1,6.4,6.6,6.9,7,Mount Alexander
+Heathcote,2.8,3,3.1,3.1,3.2,Greater Bendigo
+Kyneton,7.3,7.7,7.9,8.2,8.3,Macedon Ranges
+Woodend,5.4,5.6,5.7,6,5.9,Macedon Ranges
+Bendigo Region - North,3.2,3.4,3.5,3.6,3.6,Greater Geelong
+Loddon,4.7,5,5,5,5,Loddon
+Bannockburn,5,5.2,5.5,5.7,5.7,Golden Plains
+Golden Plains - South,5.5,5.8,6,6.1,6.4,Golden Plains
+Winchelsea,4.9,5.2,5.2,5.4,5.5,Golden Plains
+Belmont,10.7,11.4,11.8,12,12.2,Greater Geelong
+Corio - Norlane,15.3,16.3,17.1,17.7,17.8,Greater Geelong
+Geelong,11,11.4,11.5,12,12.1,Greater Geelong
+Geelong West - Hamlyn Heights,15.7,16.6,17.2,17.6,17.9,Greater Geelong
+Grovedale,17.6,20.1,21.9,24.1,26.3,Greater Geelong
+Highton,17,17.9,18.6,18.9,19.2,Greater Geelong
+Lara,13.4,14,14.7,14.9,15.1,Greater Geelong
+Leopold,9.5,10,10.1,10.1,10,Greater Geelong
+Newcomb - Moolap,10.1,10.7,11,11.3,11.2,Greater Geelong
+Newtown (Vic.),8.6,8.7,8.8,9.1,9,Greater Geelong
+North Geelong - Bell Park,10.2,10.9,11.4,11.7,11.8,Greater Geelong
+Clifton Springs,9.4,10.2,10.6,11,11.7,Greater Geelong
+Lorne - Anglesea,4.2,4.3,4.3,4.5,4.6,Surf Coast
+Ocean Grove - Barwon Heads,18.1,19.7,20.5,21.8,22.9,Greater Geelong
+Portarlington,4.3,4.6,4.8,5.2,5.4,Greater Geelong
+Point Lonsdale - Queenscliff,2.8,3,3.2,3.2,3.4,Borough of Queenscliffe
+Torquay,15.3,16.3,17.1,17.9,18.6,Surf Coast
+Alexandra,5,5,5.1,5.1,5.1,Murrindindi
+Euroa,5.2,5.1,5.2,5.3,5.1,Strathbogie
+Kilmore - Broadford,9.9,10.5,10.7,11.2,11.2,Mitchell
+Mansfield (Vic.),7.3,7.8,8,8,7.9,Mansfield
+Nagambie,3,3.2,3.4,3.5,3.5,Strathbogie
+Seymour,4.5,4.6,4.6,4.7,4.5,Mitchell
+Seymour Region,3,3.2,3.3,3.5,3.4,Mitchell
+Upper Yarra Valley,0.1,0.1,0.1,0.1,0.1,Yarra Ranges
+Yea,2.7,2.7,2.8,2.8,2.9,Murrindindi
+Benalla,7.3,7.1,7.2,7.6,7.6,Benalla Rural
+Benalla Region,3.1,3.2,3.3,3.3,3.3,Benalla Rural
+Rutherglen,3.1,3.2,3.2,3.3,3.2,Indigo
+Wangaratta,13.8,14.1,14.3,14.5,14.6,Rural Wangaratta
+Wangaratta Region,8.5,8.8,8.8,9.1,8.9,Rural Wangaratta
+Beechworth,3.7,3.8,3.9,4.1,4,Indigo
+Bright - Mount Beauty,6.9,7.3,7.3,7.7,7.4,Alpine
+Chiltern - Indigo Valley,2.6,2.8,2.7,2.8,2.8,Indigo
+Myrtleford,4,4.1,4.2,4.2,4.3,Alpine
+Towong,5,5.1,5.3,5.2,5,Towong
+West Wodonga,11.4,11.5,11.9,12.2,11.8,Wodonga
+Wodonga,18.8,19.8,20.3,20.9,21,Wodonga
+Yackandandah,4,4.1,4.2,4.3,4.4,Indigo
+Drouin,11.2,12.2,12.5,13.4,13.7,Baw Baw
+Mount Baw Baw Region,4.8,4.9,5,5.2,5.2,Baw Baw
+Trafalgar (Vic.),6.2,6.4,6.3,6.5,6.3,Baw Baw
+Warragul,14.8,15.2,15.6,16.7,17,Baw Baw
+Alps - East,np,0,0,0,0,Alpine
+Bairnsdale,10.4,10.5,10.6,10.9,10.8,East Gippsland
+Bruthen - Omeo,6.3,6.5,6.6,6.8,6.9,East Gippsland
+Lake King,np,np,np,np,np,East Gippsland
+Lakes Entrance,6.6,6.7,6.8,6.7,7,East Gippsland
+Orbost,4.4,4.4,4.5,4.7,4.8,East Gippsland
+Paynesville,3.8,3.8,3.9,4.1,4.3,East Gippsland
+Foster,6.4,6.5,6.6,6.8,6.7,South Gippsland
+French Island,0.1,0.1,0.1,0.1,0.1,Bass Coast
+Korumburra,6.8,7,7.2,7.7,7.4,South Gippsland
+Leongatha,8.2,8.4,8.6,8.9,8.6,South Gippsland
+Phillip Island,7.4,8.1,8.4,8.6,8.9,Bass Coast
+Wilsons Promontory,np,0,0,0,0,South Gippsland
+Wonthaggi - Inverloch,14.5,15,15.5,16.4,17,Bass Coast
+Churchill,8.5,8.8,9,8.9,8.7,Latrobe
+Moe - Newborough,10.6,10.9,10.9,11.3,11,Latrobe
+Morwell,8.1,8,8.1,8.3,8.2,Latrobe
+Traralgon,20.4,20.9,21.3,21.8,21.4,Latrobe
+Yallourn North - Glengarry,3.6,3.8,3.9,3.9,3.8,Latrobe
+Alps - West,0,0,0,0,0,Baw Baw
+Longford - Loch Sport,2.9,3,3.1,3.1,3.2,Wellington
+Maffra,10.9,10.9,11,11.3,11.3,Wellington
+Rosedale,3.1,3.4,3.3,3.4,3.3,Wellington
+Sale,10.7,10.7,10.9,11,10.8,Wellington
+Yarram,3.9,3.9,4,4,4,Wellington
+Brunswick,27.9,29.7,30.2,32,30.5,Moreland
+Brunswick East,12.1,13.3,13.7,14.5,14.5,Moreland
+Brunswick West,13.2,14.2,14.7,15.1,14.9,Moreland
+Coburg,23.6,24.3,25,25.9,25.3,Moreland
+Pascoe Vale South,7.9,8.5,8.7,9.1,9,Moreland
+Alphington - Fairfield,8,8.6,8.7,9,8.8,Darebin
+Northcote,24,25.3,25.8,26.9,25.4,Darebin
+Thornbury,17.3,17.7,18.5,18.9,18.5,Darebin
+Ascot Vale,12.8,13.7,14,14.5,13.9,Moonee Valley
+Essendon - Aberfeldie,24.2,25.2,25.6,26.3,26.3,Moonee Valley
+Flemington,8.6,9.1,9.7,10.1,9.7,Moonee Valley
+Moonee Ponds,12.7,13.1,13.5,14.2,14.8,Moonee Valley
+Carlton,14.1,14.6,15.4,16.2,15.7,Melbourne
+Docklands,10.8,13.1,14.8,16.8,16.9,Melbourne
+East Melbourne,5.5,5.5,5.5,5.8,5.4,Melbourne
+Flemington Racecourse,0.1,0.1,0.1,0.1,0.1,Melbourne
+Kensington (Vic.),10.8,11.3,11.2,11.7,11.5,Melbourne
+Melbourne,39.5,43.5,47.6,50.8,48.2,Melbourne
+North Melbourne,19.9,21.7,23.3,25,24.8,Melbourne
+Parkville,5.6,6,6.5,6.7,6.7,Melbourne
+South Yarra - West,5.9,6.6,10.2,7.7,7.4,Melbourne
+Southbank,19.7,21,23,25.5,26.9,Melbourne
+West Melbourne,np,0,0,0,0,Port Phillip
+Albert Park,14.3,15,15.4,15.8,15.5,Port Phillip
+Elwood,16.7,17.2,16.9,17.2,16.9,Port Phillip
+Port Melbourne,14.7,15,14.8,15.1,14.3,Port Phillip
+Port Melbourne Industrial,0.2,0.3,0.6,1.1,1.6,Port Phillip
+South Melbourne,11.4,11.9,12.5,13.1,12.4,Port Phillip
+St Kilda,32.6,35.1,36.5,37.9,36.6,Stonnington
+St Kilda East,18.4,19.7,20.4,20.9,20,Stonnington
+Armadale,8.2,8.6,9,9.3,9,Stonnington
+Prahran - Windsor,25.6,24.3,23.9,24.1,23.2,Stonnington
+South Yarra - East,22,23.6,24.2,24.7,23.9,Yarra
+Toorak,11.7,11.7,11.8,11.8,11.4,Yarra
+Abbotsford,9.5,10.5,10.3,10.7,10.5,Yarra
+Carlton North - Princes Hill,9.1,9.4,9.4,9.6,9,Yarra
+Collingwood,9.1,10,10.1,10.8,10.6,Yarra
+Fitzroy,11.5,12,12,12.3,11.7,Yarra
+Fitzroy North,12.9,13.6,13.5,14,13.4,Yarra
+Richmond (Vic.),32.7,34,34.4,35.4,34.3,Boroondara
+Yarra - North,8.9,9.2,9.2,9.6,9.4,Boroondara
+Ashburton (Vic.),5.9,6.1,6.2,6.3,6.1,Boroondara
+Balwyn,12.3,12.6,12.7,12.7,12.5,Boroondara
+Balwyn North,15.5,15.8,15.8,16.1,15.7,Boroondara
+Camberwell,17.4,17.7,17.7,17.9,17.7,Boroondara
+Glen Iris - East,13.6,14.2,14.3,14.8,14.3,Boroondara
+Hawthorn,21.8,22.6,22.9,23.2,22.3,Boroondara
+Hawthorn East,13.6,14.2,14.4,15.4,14.7,Boroondara
+Kew,21.1,21.8,21.9,22.2,21.6,Boroondara
+Kew East,5.3,5.4,5.4,5.6,5.6,Boroondara
+Surrey Hills (West) - Canterbury,13.1,13.3,13.3,13.5,13.1,Boroondara
+Bulleen,8.1,8.4,8.3,8.6,8.5,Manningham
+Doncaster,14.9,15.6,16.4,17.4,18,Manningham
+Templestowe,12.4,12.4,12.3,12.6,12.3,Manningham
+Templestowe Lower,9.5,9.8,9.9,9.9,9.8,Manningham
+Doncaster East (North),10.9,11.1,11.3,11.6,11.4,Manningham
+Doncaster East (South),9.5,9.7,9.9,10.4,10.6,Manningham
+Blackburn,16.6,17.2,17.6,18.2,18.1,Whitehorse
+Blackburn South,7.6,7.7,7.9,8.3,8.2,Whitehorse
+Box Hill,15.3,17,17.4,18,18.3,Whitehorse
+Box Hill North,13.3,13.7,14.1,14.8,14.5,Whitehorse
+Burwood,8.5,9.2,9.7,10.5,10.6,Whitehorse
+Burwood East,7.5,7.7,8.1,8.2,8.3,Whitehorse
+Surrey Hills (East) - Mont Albert,8.3,8.5,8.6,8.8,8.6,Whitehorse
+Beaumaris,10.4,10.7,10.9,11,10.7,Bayside
+Brighton (Vic.),18.1,18.5,18.5,18.8,18.1,Bayside
+Brighton East,12.1,12.3,12.5,12.7,12.5,Bayside
+Cheltenham - Highett (West),8.9,9.5,9.6,10.2,9.9,Bayside
+Hampton,13.9,14.2,14.3,14.7,14.7,Bayside
+Sandringham - Black Rock,12.8,13.2,13.3,13.9,13.6,Bayside
+Bentleigh - McKinnon,17.6,18.4,19,20.3,20.1,Glen Eira
+Carnegie,15.1,15.7,16.3,17,17.3,Glen Eira
+Caulfield - North,18,18.8,19.7,20.3,19.9,Glen Eira
+Caulfield - South,14.7,15.1,15.2,15.4,15.3,Glen Eira
+Elsternwick,10.3,10.7,11,11.5,11.2,Glen Eira
+Hughesdale,6,6.3,6.3,6.4,6.5,Glen Eira
+Murrumbeena,7.9,8.3,8.5,8.8,8.4,Glen Eira
+Ormond - Glen Huntly,11.8,12.2,12.6,13.4,13,Glen Eira
+Bentleigh East (North),11.3,11.7,11.9,12.5,12.5,Glen Eira
+Bentleigh East (South),9.8,10.2,10.5,10.8,10.9,Kingston
+Aspendale Gardens - Waterways,7.1,7.3,7.3,7.4,7.2,Kingston
+Braeside,0.2,0.2,0.2,0.2,0.1,Kingston
+Carrum - Patterson Lakes,9.2,9.6,9.4,9.6,9.5,Kingston
+Chelsea - Bonbeach,11,11.5,11.7,12.1,11.8,Kingston
+Chelsea Heights,4.1,4.2,4.2,4.3,4.2,Kingston
+Cheltenham - Highett (East),17.3,18.3,18.7,19.6,19.4,Kingston
+Edithvale - Aspendale,10.3,10.4,10.8,11,11,Kingston
+Mentone,10.6,11,11.2,11.3,11.2,Kingston
+Moorabbin - Heatherton,7,7.2,7.4,7.6,7.5,Kingston
+Moorabbin Airport,np,0,0,0,0,Kingston
+Mordialloc - Parkdale,16.2,16.5,17,17.4,17.3,Stonnington
+Malvern - Glen Iris,17.4,18,18.4,18.7,18.4,Stonnington
+Malvern East,17.3,18,18.3,19,18.9,Banyule
+Bundoora - East,7.2,7.3,7.5,7.7,7.7,Banyule
+Greensborough,16.4,16.9,16.9,17.1,16.6,Banyule
+Heidelberg - Rosanna,11.8,12.2,12.5,12.9,12.6,Banyule
+Heidelberg West,10.6,11.2,11.7,12.3,12.4,Banyule
+Ivanhoe,9.8,10.5,10.9,11.1,10.8,Banyule
+Ivanhoe East - Eaglemont,6.6,6.8,6.8,6.9,6.7,Banyule
+Montmorency - Briar Hill,13,13.1,13.2,13.3,12.8,Banyule
+Viewbank - Yallambie,13.6,14,13.9,14.4,14,Banyule
+Watsonia,6.9,7.1,7.2,7.4,7.1,Banyule
+Kingsbury,7.6,8.2,8.7,9.3,9.2,Darebin
+Reservoir - East,19.7,21,22.2,23.3,23,Darebin
+Reservoir - West,17.4,18.7,19.1,19.6,19.2,Darebin
+Preston - East,16.5,18,18.6,19.6,19.1,Darebin
+Preston - West,10.3,10.9,11.3,11.7,11.6,Darebin
+Eltham,19.8,19.9,19.9,20.1,19.3,Nillumbik
+Hurstbridge,3,3.1,3.1,3,3,Nillumbik
+Kinglake,3.1,3.2,3.1,3.3,3.3,Nillumbik
+Panton Hill - St Andrews,4.3,4.3,4.4,4.4,4.2,Nillumbik
+Plenty - Yarrambat,7.7,7.9,7.9,8,7.8,Nillumbik
+Research - North Warrandyte,5.5,5.7,5.7,5.7,5.7,Nillumbik
+Wattle Glen - Diamond Creek,11.7,12,12.1,12.3,12.2,Nillumbik
+Bundoora - North,5.2,5.7,6,6.1,6,Whittlesea
+Bundoora - West,4.4,4.8,4.7,4.9,4.9,Whittlesea
+Lalor,13.8,14.6,15.5,16,15.9,Whittlesea
+Mill Park - North,14.1,14.8,14.8,15.1,14.8,Whittlesea
+Mill Park - South,9.3,9.3,9.4,9.5,9,Whittlesea
+Thomastown,12.8,13.7,14.1,14.8,14.6,Whittlesea
+Wallan,12.4,13.7,14.3,15.5,16.2,Whittlesea
+Whittlesea,5.9,6.1,6.2,6.4,6.7,Whittlesea
+Doreen,15.5,16.9,18,19.3,20,Whittlesea
+Epping - East,9.5,10,10.2,10.3,9.9,Whittlesea
+Epping - South,6.1,6.4,6.4,6.5,6.3,Whittlesea
+Epping - West,7.9,8.4,8.8,9.1,9,Whittlesea
+Mernda,12.3,14.4,15.7,17,17.7,Whittlesea
+South Morang (North),9.3,9.8,10.2,10.5,10.3,Whittlesea
+South Morang (South),9,9.5,9.6,10,10,Whittlesea
+Wollert,6.5,8.3,9.5,11.7,14.5,Whittlesea
+Airport West,5.7,6.1,6.2,6.5,6.6,Moonee Valley
+Essendon Airport,np,0,0,0,0,Moonee Valley
+Keilor,6.6,6.8,6.9,6.8,6.6,Brimbank
+Keilor East,18.2,18.8,19,19.7,19.3,Brimbank
+Niddrie - Essendon West,5.7,5.9,6,6,6.2,Moonee Valley
+Strathmore,7.8,8,8.1,8.4,8.3,Moonee Valley
+Gisborne,10,10.4,10.3,10.7,10.7,Macedon Ranges
+Macedon,2.6,2.7,2.7,2.7,2.6,Macedon Ranges
+Riddells Creek,3.4,3.5,3.5,3.6,3.5,Macedon Ranges
+Romsey,7.2,7.5,7.8,8.1,8.2,Macedon Ranges
+Coburg North,6.2,6.9,7.1,7.5,7.3,Moreland
+Fawkner,8.3,9,9.7,10.2,10.2,Moreland
+Pascoe Vale,18.6,20.1,20.7,22.2,22.2,Moreland
+Glenroy,16.2,17.7,18.6,20.1,20.7,Moreland
+Gowanbrae,2.3,2.4,2.4,2.5,2.4,Moreland
+Hadfield,3.5,3.8,4,4.3,4.3,Hume
+Sunbury,10.1,10.5,10.7,11.1,10.8,Hume
+Sunbury - South,20.7,22,23,24.4,24.5,Hume
+Broadmeadows,7.1,8,8.6,9.4,9.5,Hume
+Campbellfield - Coolaroo,8,8.5,8.9,9.4,9.1,Hume
+Gladstone Park - Westmeadows,13.2,13.4,13.7,13.7,13.4,Hume
+Greenvale - Bulla,12.8,14.1,14.7,15.3,15.7,Hume
+Meadow Heights,7.5,7.9,8.1,8.5,8.3,Hume
+Melbourne Airport,0.1,0.1,0.1,0.1,0.1,Hume
+Roxburgh Park - Somerton,12.2,13.2,13.8,14.8,14.8,Hume
+Tullamarine,5,5,5.2,5.2,5,Hume
+Craigieburn - Central,6.1,6.4,6.4,6.6,6.2,Hume
+Craigieburn - North,8,8.9,9.5,9.9,9.5,Hume
+Craigieburn - South,11.8,13,14,14.7,15,Hume
+Craigieburn - West,9.5,11,12.3,13.8,14.9,Hume
+Mickleham - Yuroke,2.6,4.3,6.6,9.7,13.5,Hume
+Bayswater,9.6,9.8,10.2,10.3,10.2,Knox 
+Knoxfield - Scoresby,11.6,12.4,12.8,13.5,13.2,Knox 
+Lysterfield,5.8,5.9,5.8,6,5.7,Knox 
+Rowville - Central,12.8,12.9,12.8,13.1,12.9,Knox 
+Rowville - North,6.4,6.6,6.6,6.7,6.5,Knox 
+Rowville - South,8.9,9.3,9.2,9.3,9,Knox 
+Wantirna,10.9,11,11.1,11.3,11,Knox 
+Wantirna South,14.1,14.2,14.4,14.5,14.4,Knox 
+Boronia,17.3,17.8,18.1,18.6,18.3,Knox 
+Ferntree Gully (North),10.8,11.2,11.1,11.5,11,Knox 
+Ferntree Gully (South) - Upper Ferntree Gully,12.1,12.4,12.5,13,12.6,Knox 
+The Basin,3.5,3.7,3.6,3.6,3.6,Knox 
+Donvale - Park Orchards,12.3,12.5,12.6,12.8,12.7,Manningham
+Warrandyte - Wonga Park,8.7,8.5,8.5,8.6,8.3,Manningham
+Bayswater North,9.4,9.7,9.9,10.1,9.7,Maroondah
+Croydon Hills - Warranwood,15.6,15.7,15.6,15.6,15.2,Maroondah
+Ringwood,13.3,13.9,14.5,15,14.9,Maroondah
+Ringwood East,15.9,16.5,16.8,17.1,16.7,Maroondah
+Ringwood North,7.9,8,7.9,7.9,7.6,Maroondah
+Croydon - East,11.5,12.1,12.1,12.5,12.4,Maroondah
+Croydon - West,9.9,10.2,10.4,10.6,10.7,Maroondah
+Croydon South,3.6,3.6,3.7,3.8,3.8,Maroondah
+Forest Hill,7.8,7.9,8,8.3,8.2,Whitehorse
+Mitcham (Vic.),13,13.5,13.7,14.2,14.1,Whitehorse
+Nunawading,8.9,9.5,9.6,9.9,9.9,Whitehorse
+Vermont,7.8,8,8.1,8.3,8.1,Whitehorse
+Vermont South,8.6,8.8,8.7,9.1,8.9,Whitehorse
+Belgrave - Selby,8.4,8.7,8.5,8.9,8.5,Yarra Ranges
+Chirnside Park,7.9,8.4,8.8,9,9,Yarra Ranges
+Healesville - Yarra Glen,10.5,10.8,11,11.3,11,Yarra Ranges
+Kilsyth,6.9,7,7.1,7.3,7.3,Yarra Ranges
+Lilydale - Coldstream,15.2,15.7,15.6,15.7,15.4,Yarra Ranges
+Monbulk - Silvan,4.6,4.9,4.9,4.9,4.7,Yarra Ranges
+Montrose,5.5,5.5,5.5,5.5,5.4,Yarra Ranges
+Mooroolbark,17.7,18.2,18.3,18.7,18.4,Yarra Ranges
+Mount Dandenong - Olinda,8.2,8.2,8.2,8.2,8.1,Yarra Ranges
+Mount Evelyn,7.9,8.1,8.1,8.3,8.1,Yarra Ranges
+Upwey - Tecoma,8.7,8.8,8.7,9,8.5,Yarra Ranges
+Wandin - Seville,6.5,6.6,6.7,6.9,6.9,Yarra Ranges
+Yarra Valley,12.2,12.7,12.7,13.1,12.9,Yarra Ranges
+Beaconsfield - Officer,10.9,13,15,17.1,18.3,Cardinia
+Bunyip - Garfield,6.8,7.3,7.4,7.6,7.6,Cardinia
+Emerald - Cockatoo,14.3,15.1,15.1,15.4,15.1,Cardinia
+Koo Wee Rup,5.9,6.3,6.5,6.8,7.3,Cardinia
+Pakenham - North,14.2,15.3,16,16.8,16.9,Cardinia
+Pakenham - South,20.5,22.2,23.3,24.5,25,Cardinia
+Berwick - North,17.6,18.1,18,18.2,17.8,Casey
+Berwick - South,19.6,20.8,21.6,22.9,23,Casey
+Doveton,7,7.5,7.8,8.1,8.2,Casey
+Hallam,7.7,7.8,8,8.3,8.2,Casey
+Narre Warren North,6.1,6.3,6.3,6.4,6.2,Casey
+Endeavour Hills - North,8.7,8.9,9.2,9.4,9.1,Casey
+Endeavour Hills - South,10.4,10.6,10.6,10.6,10.2,Casey
+Narre Warren - North East,10.5,10.8,10.9,11.2,10.9,Casey
+Narre Warren - South West,10.5,11,11.4,11.8,11.6,Casey
+Cranbourne,15.1,15.4,16,16.5,16.2,Casey
+Cranbourne East,18.9,25.5,31.3,38.6,44,Casey
+Cranbourne North,15.3,16.8,18.2,19,19.2,Casey
+Cranbourne South,6.9,7.5,8.4,10.1,11.9,Casey
+Cranbourne West,11.8,13.4,14.4,15.5,16.3,Casey
+Hampton Park - Lynbrook,18.5,19.1,19.6,19.9,19.5,Casey
+Lynbrook - Lyndhurst,11.6,12.5,13.2,13.8,14.1,Casey
+Pearcedale - Tooradin,6.2,6.5,6.5,6.5,6.4,Casey
+Narre Warren South (East),10.2,10.5,10.7,11,10.6,Casey
+Narre Warren South (West),12.2,12.8,13.1,13.1,12.7,Casey
+Clarinda - Oakleigh South,8.7,9,9,9,8.7,Monash
+Clayton South,9.7,10.4,11,11.7,12,Kingston
+Dandenong,20.6,22,23.4,24.5,24,Greater Dandenong
+Dandenong North,15.7,16.4,16.7,17.4,16.8,Greater Dandenong
+Dingley Village,8.1,8.2,8.1,8.4,8.1,Kingston
+Keysborough,19.2,20.6,21.5,23.1,23.2,Greater Dandenong
+Noble Park North,5.2,5.4,5.4,5.7,5.5,Greater Dandenong
+Springvale,14.8,15.7,16.9,18.2,18.7,Greater Dandenong
+Springvale South,8.8,9.1,9.5,9.9,9.7,Greater Dandenong
+Noble Park - East,9.5,10.3,10.8,11.7,11.8,Greater Dandenong
+Noble Park - West,12.6,13.8,14.7,15.8,16.2,Greater Dandenong
+Ashwood - Chadstone,14,15.2,15.6,16.6,16.7,Monash
+Clayton,14,14.8,15.8,17.3,18.3,Monash
+Glen Waverley - East,14.8,15.2,15.5,15.9,15.7,Monash
+Glen Waverley - West,13.8,14.1,14.7,15.6,15.5,Monash
+Mount Waverley - North,11.3,11.8,12.1,12.6,12.4,Monash
+Mount Waverley - South,13.7,14.5,15,15.3,15.1,Monash
+Mulgrave,14.3,14.5,14.7,15.4,15.5,Monash
+Oakleigh - Huntingdale,17,17.9,18.5,19.5,19.6,Monash
+Wheelers Hill,14.5,14.4,14.6,14.9,14.6,Monash
+Ardeer - Albion,6.1,6.4,6.7,7.2,7.1,Brimbank
+Cairnlea,7,7.3,7.7,7.7,7.6,Brimbank
+Deer Park - Derrimut,18.3,19.3,20,20.6,20,Brimbank
+Delahey,6,6.2,6.3,6.4,6,Brimbank
+Keilor Downs,9.8,10,10.1,10.3,9.7,Brimbank
+Kings Park (Vic.),8.5,8.9,9.3,9.5,9.1,Brimbank
+St Albans - North,12.9,13.9,14.9,15.5,15.1,Brimbank
+St Albans - South,10.8,11.7,12.4,12.6,12.4,Brimbank
+Sunshine,7.6,8.2,8.7,9.3,9.2,Brimbank
+Sunshine North,7.6,7.9,8.5,9,9,Brimbank
+Sunshine West,12.4,13.3,14,14.6,14.1,Brimbank
+Sydenham,9.3,9.6,9.8,10.1,9.8,Brimbank
+Taylors Lakes,14.8,15.2,14.8,14.6,14.3,Brimbank
+Altona,10.2,10.6,10.7,10.8,10.7,Hobsons Bay
+Altona Meadows,14.6,15.1,15.2,15.3,14.7,Hobsons Bay
+Altona North,9.2,9.9,10.3,10.9,10.7,Hobsons Bay
+Newport,15.1,15.9,16.1,16.6,16.3,Hobsons Bay
+Seabrook,3.9,4,4.2,4.2,4.1,Hobsons Bay
+Williamstown,12.7,12.9,13.1,13.4,13.3,Hobsons Bay
+Braybrook,13.9,15,15.8,16.7,16.8,Maribyrnong
+Footscray,16,17.2,18.1,18.7,18.7,Maribyrnong
+Maribyrnong,11.1,11.9,12.3,12.7,12.7,Maribyrnong
+Seddon - Kingsville,8.6,9.1,9.2,9.2,8.9,Maribyrnong
+West Footscray - Tottenham,10.5,11.1,11.4,12,11.5,Maribyrnong
+Yarraville,13.5,13.8,14.1,14.5,14.2,Maribyrnong
+Bacchus Marsh,15,16.2,16.5,17.5,17.9,Moorabool
+Hillside,15.9,16.9,18.4,19.2,19.5,Melton
+Melton,12.9,14,13.9,14.1,13.7,Melton
+Melton South,16.2,16.7,19.7,21.6,23.2,Melton
+Melton West,12.7,7,14.4,15.2,15,Melton
+Rockbank - Mount Cottrell,1.4,1.3,3.2,4.9,7.9,Melton
+Taylors Hill,13.5,14.1,14.4,15,14.8,Melton
+Burnside,3.3,3.6,3.7,3.9,3.9,Melton
+Burnside Heights,4.3,4.6,4.6,4.8,4.6,Melton
+Caroline Springs,14.7,15.4,15.8,16.3,16,Wyndham
+Hoppers Crossing - North,15.5,16,16.4,16.5,15.7,Wyndham
+Hoppers Crossing - South,14.2,14.7,15.4,15.7,15.2,Wyndham
+Laverton,7.5,8.7,9.4,10.7,11,Wyndham
+Tarneit,26.7,30.1,34.2,38.6,41.6,Wyndham
+Truganina,17.6,20.3,22.7,25.7,28.2,Wyndham
+Werribee - South,8.7,9.6,10.2,11.5,12.6,Wyndham
+Wyndham Vale,17.1,19.3,20.5,22.5,24,Wyndham
+Point Cook - East,9.2,11.2,12.5,13.9,14.8,Wyndham
+Point Cook - North,17.3,18,18.8,19.1,18.8,Wyndham
+Point Cook - South,11,12.5,13.1,14.2,14.2,Wyndham
+Werribee - East,13.6,14.4,14.6,15,14.5,Wyndham
+Werribee - West,9.5,10.8,12.2,14.3,16.2,Wyndham
+Carrum Downs,16.3,16.8,17.4,18.2,17.9,Wyndham
+Frankston,17,17.8,18.4,19,18.5,Frankston
+Frankston North,12.8,13.3,13.7,14.3,13.7,Frankston
+Frankston South,14.3,14.6,14.6,14.7,14.4,Frankston
+Langwarrin,20,20.2,20.4,20.7,20.1,Frankston
+Seaford (Vic.),12.9,13.3,13.4,13.6,13.4,Frankston
+Skye - Sandhurst,10.5,10.8,11,11.3,11.1,Frankston
+Dromana,7.8,8.5,8.6,9.1,8.9,Mornington Peninsula
+Flinders,4.3,4.4,4.4,4.4,4.3,Mornington Peninsula
+Hastings - Somers,15.6,16,16.3,16.9,16.8,Mornington Peninsula
+Mornington,17.2,17.9,18,18.4,18,Mornington Peninsula
+Mount Eliza,13.4,13.7,14.1,14,13.8,Mornington Peninsula
+Mount Martha,13.9,14.1,14.3,14.7,14.5,Mornington Peninsula
+Point Nepean,12.2,12.5,12.5,12.9,12.9,Mornington Peninsula
+Rosebud - McCrae,13.1,13.7,14,14.4,14.5,Mornington Peninsula
+Somerville,14.8,15.3,15.3,15.6,15,Mornington Peninsula
+Ararat,5.6,5.7,6,5.9,5.9,Ararat Rural
+Ararat Region,2.8,2.8,2.9,2.9,2.9,Ararat Rural
+Horsham,12.7,13.2,13.4,13.4,13.6,Horsham Rural
+Horsham Region,3.3,3.4,3.4,3.4,3.4,Horsham Rural
+Nhill Region,5.2,5.4,5.6,5.7,5.6,West Wimmera
+St Arnaud,2.7,2.7,2.8,2.8,2.7,Northern Grampians
+Stawell,6,6.3,6.5,6.6,6.5,Northern Grampians
+West Wimmera,2.6,2.7,2.7,2.7,2.7,West Wimmera
+Yarriambiack,4.9,5.1,5.2,5,5.1,Yarriambiack
+Irymple,4.8,5.3,5.4,5.9,6.1,Mildura Rural
+Merbein,3.6,4,3.9,3.9,4,Mildura Rural
+Mildura Region,2.8,3,3.1,3.3,3.2,Mildura Rural
+Red Cliffs,4.5,4.9,5.1,5.4,5.7,Mildura Rural
+Mildura - North,14.7,15.4,15.8,16.5,16.4,Mildura Rural
+Mildura - South,10.4,11.3,13.2,13.7,14.4,Mildura Rural
+Buloke,4.6,5,5,4.8,5,Buloke
+Gannawarra,4.9,5.2,5.2,5.1,5,Gannawarra
+Kerang,2.8,2.8,2.8,2.8,2.7,Gannawarra
+Robinvale,2.8,3,2.9,3.4,4,Swan Hill Rural
+Swan Hill,8.8,9,9.1,9.1,9.2,Swan Hill Rural
+Swan Hill Region,5.2,5.5,5.5,5.7,5.9,Swan Hill Rural
+Echuca,12.3,12.4,12.6,12.6,12.6,Campaspe
+Kyabram,8.2,8.3,8.4,8.7,8.5,Campaspe
+Lockington - Gunbower,3.1,3.2,3.3,3.3,3.2,Campaspe
+Rochester,2.9,3.1,3.2,3.1,3,Campaspe
+Rushworth,2.9,3,2.9,3,3,Campaspe
+Cobram,4.4,4.5,4.7,4.6,4.7,Moira
+Moira,2.2,2.3,2.3,2.3,2.4,Moira
+Numurkah,9.8,10.1,10,9.9,9.9,Moira
+Yarrawonga,5,5.2,5.3,5.5,5.6,Moira
+Mooroopna,6.1,6.1,6,6.3,6.1,Greater Shepparton
+Shepparton - North,14.8,15.1,15.3,15.9,15.7,Greater Shepparton
+Shepparton - South,16.9,17.4,17.7,18.9,19.1,Greater Shepparton
+Shepparton Region - East,3.6,3.6,3.6,3.7,3.6,Greater Shepparton
+Shepparton Region - West,8.1,8.2,8.1,8.5,8.5,Greater Shepparton
+Glenelg (Vic.),7.6,7.6,7.7,7.8,7.7,Glenelg
+Hamilton (Vic.),8.5,8.3,8.4,8.5,8.6,Southern Grampians
+Portland,8.2,8.3,8.3,8.5,8.4,Glenelg
+Southern Grampians,6,6.2,6.2,6.3,6.2,Southern Grampians
+Camperdown,2.6,2.6,2.6,2.7,2.6,Corangamite
+Colac,9.3,9.5,9.5,10.4,9.9,Colac Otway
+Colac Region,4.8,4.9,5,5.1,5.1,Colac Otway
+Corangamite - North,4.3,4.4,4.6,4.6,4.5,Corangamite
+Corangamite - South,6.2,6.3,6.4,6.6,6.5,Corangamite
+Otway,3.1,3.2,3.2,3.4,3.3,Colac Otway
+Moyne - East,5.8,6,6.1,6.5,6.2,Moyne
+Moyne - West,7.8,8,8,8.4,8.4,Moyne
+Warrnambool - North,17.4,17.9,18,19.1,18.4,Warrnambool
+Warrnambool - South,10.6,10.7,10.4,11.7,11.1,Warrnambool
