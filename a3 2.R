@@ -203,7 +203,6 @@ ui <- fluidPage(
                                   step = 1      # Step size (1 year)
                                 ),
                                 actionButton("start_stop", "Start"),
-                                textOutput("status"),
                                 # LGA selection dropdown
                                 selectInput("lga", "Select LGA:", 
                                             choices = unique(age_sex_male_data$LGA.name), 
@@ -333,7 +332,7 @@ server <- function(input, output,session) {
   })
   
   observeEvent(auto_increment_timer(), {
-    if (current_year() < 2021) {
+    if (is_running() && current_year() < 2021) {
       current_year(current_year() + 1)
     } else {
       is_running(FALSE)
@@ -347,20 +346,12 @@ server <- function(input, output,session) {
   })
   
   observeEvent(input$start_stop, {
-    if (!is_running()) {
+    if (!is_running() && input$start_stop > 0) {
       is_running(TRUE)
       updateActionButton(session, "start_stop", label = "Stop")
     } else {
       is_running(FALSE)
       updateActionButton(session, "start_stop", label = "Start")
-    }
-  })
-  
-  output$status <- renderText({
-    if (is_running()) {
-      "Slider is running..."
-    } else {
-      "Slider is stopped."
     }
   })
   
