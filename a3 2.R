@@ -203,6 +203,7 @@ ui <- fluidPage(
                                   step = 1      # Step size (1 year)
                                 ),
                                 actionButton("start_stop", "Start"),
+                                br(),
                                 # LGA selection dropdown
                                 selectInput("lga", "Select LGA:", 
                                             choices = unique(age_sex_male_data$LGA.name), 
