@@ -11,6 +11,7 @@ library(sf)
 library(openxlsx)
 library(dplyr)
 library(tidyr)
+library(shinydashboard)
 
 ##################################
 # Data Pre-Processing and Loading
@@ -166,6 +167,15 @@ ui <- fluidPage(
   navbarPage("",
              tabPanel("Income Map", id = "income-map-tab",
                       fluidPage(
+                        fluidRow(
+                          column(width = 6, valueBoxOutput("LGA_Name")),
+                          column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
+                        ),
+                        tags$style(HTML("
+                          .income-box {
+                            margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
+                          }
+                        ")),
                         leafletOutput("map", height = "100vh"),
                         tags$div(
                           style = "position: absolute; top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
@@ -240,23 +250,78 @@ ui <- fluidPage(
 ################
 
 server <- function(input, output) {
+  # 创建一个reactiveVal存储选定的LGA名字
+  selected_LGA <- reactiveVal(NULL)
+  
   output$map <- renderLeaflet({
     # Create a color palette based on user's choice
     pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
     
     leaflet(data = spdf) %>%
-      addProviderTiles(providers$CartoDB.DarkMatter) %>%
+      addProviderTiles(providers$CartoDB.Positron) %>%
       addPolygons(
         fillColor = ~ifelse(is.na(spdf[[input$data_choice]]), "gray", pal(spdf[[input$data_choice]])), 
         fillOpacity = 0.7,  
         color = "white",
         weight = 1,
+        layerId = ~spdf$`LGA NAME`, # 这是添加的部分
         popup = paste0("<strong>LGA: </strong>", spdf$`LGA NAME`, 
-                       "<br><strong>", input$data_choice, ": </strong>", spdf[[input$data_choice]])
+                       "<br><strong>", input$data_choice, ": </strong>", 
+                       ifelse(is.na(spdf[[input$data_choice]]), "No useful information", spdf[[input$data_choice]]))
+        
       ) %>%
       addLegend(pal = pal, values = ~spdf[[input$data_choice]], title = input$data_choice, position = "bottomright") 
   })
   
+  # Add an observer for the click event
+  observeEvent(input$map_shape_click, {
+    click_data <- input$map_shape_click
+    if (is.na(click_data$id) || is.null(click_data$id)) {
+      selected_LGA("undefined")
+    } else {
+      selected_LGA(click_data$id)
+    }
+  })
+  
+  # Use the selected_LGA reactiveVal in the renderValueBox function
+  output$LGA_Name <- renderValueBox({
+    valueBox(
+      paste("Selected LGA: ", selected_LGA()), "LGA Selection"
+    )
+  })
+  
+  output$Income <- renderValueBox({
+    # 根据selected_LGA()找到对应的行索引
+    row_index <- which(spdf@data$`LGA NAME` == selected_LGA())
+    
+    # 如果row_index为空，则直接返回"undefined"
+    if(length(row_index) == 0) {
+      return(valueBox(paste(input$data_choice, ": undefined"), "Income Selection"))
+    }
+    
+    # 获取选中LGA在input$data_choice所指定的列中的值
+    selected_value <- spdf@data[row_index, as.character(input$data_choice)]
+    
+    # 为了确保selected_value是一个单一的值，我们取向量的第一个元素
+    selected_value <- selected_value[1]
+    
+    if (is.na(selected_value)) {
+      valueBox(
+        paste(input$data_choice, ": undefined"), "Income Selection"
+      )
+    } else {
+      valueBox(
+        paste(input$data_choice, ": ", selected_value), "Income Selection"
+      )
+    }
+  })
+  
+  
+  
+  
+  
+  
+
   output$barplot <- renderPlotly({
     top1 <- merged_data$`Top 1% %`
     top5 <- merged_data$`Top 5% %`
