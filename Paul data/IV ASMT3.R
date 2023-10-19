@@ -22,6 +22,8 @@ salary_data <- read.csv("Income By Gender and area.csv", header = TRUE)
 # ... [previous code] ...
 
 ui <- fluidPage(
+  tags$div("LGA: Local Government Area", style = "position: absolute; top: 60px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
+  tags$div("More Specific Area: Statistic Area Level 2", style = "position: absolute; top: 90px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
   tags$style(HTML("
     body {
       background-color: black;

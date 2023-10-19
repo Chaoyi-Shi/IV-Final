@@ -239,6 +239,8 @@ ui <- fluidPage(
                   
                 ),
        tabPanel("Jobs and salary in Victoria by areas in 2019",
+                tags$div("LGA: Local Government Area", style = "position: absolute; top: 60px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
+                tags$div("More Specific Area: Statistic Area Level 2", style = "position: absolute; top: 90px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
                 # Sidebar
                 div(style = "float: left; width: 25%;",  # This CSS will make the sidebar float to the left and occupy 25% width
                     div(
