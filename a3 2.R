@@ -252,6 +252,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   # 创建一个reactiveVal存储选定的LGA名字
   selected_LGA <- reactiveVal(NULL)
+  spdf$Unique_LGA_ID <- paste0(spdf$`LGA NAME`, "_", seq_len(nrow(spdf)))
   
   output$map <- renderLeaflet({
     # Create a color palette based on user's choice
@@ -264,7 +265,7 @@ server <- function(input, output) {
         fillOpacity = 0.7,  
         color = "white",
         weight = 1,
-        layerId = ~spdf$`LGA NAME`, # 这是添加的部分
+        layerId = ~spdf$Unique_LGA_ID,
         popup = paste0("<strong>LGA: </strong>", spdf$`LGA NAME`, 
                        "<br><strong>", input$data_choice, ": </strong>", 
                        ifelse(is.na(spdf[[input$data_choice]]), "No useful information", spdf[[input$data_choice]]))
