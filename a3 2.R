@@ -195,22 +195,23 @@ ui <- fluidPage(
                   absolutePanel(top = 100, left = 40,
                                 selectInput(
                                             "year", "Select Year:", 
-                                            choices=c('2011'= 'X2011_rate',
-                                                      '2012'= 'X2012_rate',
-                                                      '2013'= 'X2013_rate',
-                                                      '2014'= 'X2014_rate',
-                                                      '2015'= 'X2015_rate',
-                                                      '2016'= 'X2016_rate',
-                                                      '2017'= 'X2017_rate',
-                                                      '2018'= 'X2018_rate',
-                                                      '2019'= 'X2019_rate',
-                                                      '2020'= 'X2020_rate',
-                                                      '2021'= 'X2021_rate'),
-                                            selected= 'X2021_rate'),
+                                            choices=c('2011',
+                                                      '2012',
+                                                      '2013',
+                                                      '2014',
+                                                      '2015',
+                                                      '2016',
+                                                      '2017',
+                                                      '2018',
+                                                      '2019',
+                                                      '2020',
+                                                      '2021')),
                                 # LGA selection dropdown
                                 selectInput("lga", "Select LGA:", 
                                             choices = unique(age_sex_male_data$LGA.name), 
-                                            selected = unique(age_sex_male_data$LGA.name)[1])
+                                            selected = unique(age_sex_male_data$LGA.name)[1]),
+                                actionButton("play_pause", "Play/Pause"),
+                                sliderInput("speed", "Animation Speed (ms):", min = 3000, max = 10000, value = 4000)
                    ),
                   tags$script('
                   $(document).ready(function() {
@@ -219,7 +220,7 @@ ui <- fluidPage(
                   containment: "parent" // Restrict movement to the parent container
                    });
                   '),
-                  absolutePanel( top = 300,     # Position from the top of the page (in pixels)
+                  absolutePanel( top = 400,     # Position from the top of the page (in pixels)
                                  left = 40,    # Position from the left of the page (in pixels)
                                  width = 400,   # Width of the panel (in pixels)
                                  height = 400,  # Height of the panel (in pixels)
@@ -239,7 +240,7 @@ ui <- fluidPage(
 # SHINY SERVER #
 ################
 
-server <- function(input, output) {
+server <- function(input, output,session) {
   output$map <- renderLeaflet({
     # Create a color palette based on user's choice
     pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
@@ -324,8 +325,42 @@ server <- function(input, output) {
   })
   
   ################ birth rate and gender age structure ########################
+  years <- c(2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021)  
+  current_year <- reactiveVal(min(years))  # Initialize with the first year
+  current_year <- reactiveVal(min(years))  # Initialize with the first year
+  is_animating <- reactiveVal(FALSE)  # Initialize with paused state
+  
+  observeEvent(input$play_pause, {
+    if (is_animating()) {
+      # Animation is already running, stop it
+      is_animating(FALSE)
+    } else {
+      # Start the animation
+      is_animating(TRUE)
+      animate_years()
+    }
+  })
+  
+  animate_years <- function() {
+    observe({
+      if (is_animating()) {
+        # Calculate the new year
+        new_year <- as.numeric(current_year()) + 1
+        # Wrap around if necessary
+        if (new_year > max(as.numeric(years))) {
+          new_year <- min(as.numeric(years))
+        }
+        # Update the current year
+        current_year(as.character(new_year))
+        # Schedule the next update based on the chosen speed
+        invalidateLater(1000000, session)
+      }
+    })
+  }
+  
   output$birth_rate_map <- renderLeaflet({
-    target_col <- input$year
+    target_col <- paste0("X", current_year(), "_rate")
+    print(target_col)
     pal <- colorNumeric(
       palette = "Blues",
       domain = lga_data[[target_col]]
@@ -341,7 +376,7 @@ server <- function(input, output) {
         color = "white",
         label = ~paste(LGA.Name, "<br>Birth Rate: ", round(get(target_col), 2))
       ) %>%
-      setView(lng = 145, lat = -38, zoom = 6.1)%>%
+      setView(lng = 145, lat = -38, zoom = 6.1) %>%
       addLegend(
         pal = pal,
         values = lga_data[[target_col]],
@@ -352,7 +387,7 @@ server <- function(input, output) {
   
   output$genderAgePlot <- renderPlot({
     # Using gsub to extract the numeric part
-    numeric_part <- gsub("[^0-9]", "", input$year)
+    numeric_part <- input$year
     #print(numeric_part)
     filtered_male <- age_sex_male_data %>%
       filter(Year == numeric_part, LGA.name == input$lga)
