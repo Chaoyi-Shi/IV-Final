@@ -199,51 +199,51 @@ ui <- fluidPage(
                       div(id = "tableauVizRoad", style = "height:500px;"),
                       uiOutput("embedTableauVizRoad")
              ),
-       tabPanel("Population",
-                fluidPage(
-                  leafletOutput("birth_rate_map", height = "100vh"),
-                  absolutePanel(top = 100, left = 40,
-                                selectInput(
-                                            "year", "Select Year:", 
-                                            choices=c('2011'= 'X2011_rate',
-                                                      '2012'= 'X2012_rate',
-                                                      '2013'= 'X2013_rate',
-                                                      '2014'= 'X2014_rate',
-                                                      '2015'= 'X2015_rate',
-                                                      '2016'= 'X2016_rate',
-                                                      '2017'= 'X2017_rate',
-                                                      '2018'= 'X2018_rate',
-                                                      '2019'= 'X2019_rate',
-                                                      '2020'= 'X2020_rate',
-                                                      '2021'= 'X2021_rate'),
-                                            selected= 'X2021_rate'),
-                                # LGA selection dropdown
-                                selectInput("lga", "Select LGA:", 
-                                            choices = unique(age_sex_male_data$LGA.name), 
-                                            selected = unique(age_sex_male_data$LGA.name)[1])
-                   ),
-                  tags$script('
+             tabPanel("Population",
+                      fluidPage(
+                        leafletOutput("birth_rate_map", height = "100vh"),
+                        absolutePanel(top = 100, left = 40,
+                                      selectInput(
+                                        "year", "Select Year:", 
+                                        choices=c('2011'= 'X2011_rate',
+                                                  '2012'= 'X2012_rate',
+                                                  '2013'= 'X2013_rate',
+                                                  '2014'= 'X2014_rate',
+                                                  '2015'= 'X2015_rate',
+                                                  '2016'= 'X2016_rate',
+                                                  '2017'= 'X2017_rate',
+                                                  '2018'= 'X2018_rate',
+                                                  '2019'= 'X2019_rate',
+                                                  '2020'= 'X2020_rate',
+                                                  '2021'= 'X2021_rate'),
+                                        selected= 'X2021_rate'),
+                                      # LGA selection dropdown
+                                      selectInput("lga", "Select LGA:", 
+                                                  choices = unique(age_sex_male_data$LGA.name), 
+                                                  selected = unique(age_sex_male_data$LGA.name)[1])
+                        ),
+                        tags$script('
                   $(document).ready(function() {
                   // Make the absolute panel draggable
                   $("#draggablePanel").draggable({
                   containment: "parent" // Restrict movement to the parent container
                    });
                   '),
-                  absolutePanel( top = 300,     # Position from the top of the page (in pixels)
-                                 left = 40,    # Position from the left of the page (in pixels)
-                                 width = 400,   # Width of the panel (in pixels)
-                                 height = 400,  # Height of the panel (in pixels)
-                                 
-                                 # Render a plot within the absolute panel
-                                 plotOutput("genderAgePlot")
-                                )
-                  )
-                  
-                )
-       )
+                        absolutePanel( top = 300,     # Position from the top of the page (in pixels)
+                                       left = 40,    # Position from the left of the page (in pixels)
+                                       width = 400,   # Width of the panel (in pixels)
+                                       height = 400,  # Height of the panel (in pixels)
+                                       
+                                       # Render a plot within the absolute panel
+                                       plotOutput("genderAgePlot")
+                        )
+                      )
+                      
+             )
+  )
 )
 
-  
+
 
 ################
 # SHINY SERVER #
@@ -252,7 +252,6 @@ ui <- fluidPage(
 server <- function(input, output) {
   # 创建一个reactiveVal存储选定的LGA名字
   selected_LGA <- reactiveVal(NULL)
-  spdf$Unique_LGA_ID <- paste0(spdf$`LGA NAME`, "_", seq_len(nrow(spdf)))
   
   output$map <- renderLeaflet({
     # Create a color palette based on user's choice
@@ -265,7 +264,7 @@ server <- function(input, output) {
         fillOpacity = 0.7,  
         color = "white",
         weight = 1,
-        layerId = ~spdf$Unique_LGA_ID,
+        layerId = ~spdf$`LGA NAME`, # 这是添加的部分
         popup = paste0("<strong>LGA: </strong>", spdf$`LGA NAME`, 
                        "<br><strong>", input$data_choice, ": </strong>", 
                        ifelse(is.na(spdf[[input$data_choice]]), "No useful information", spdf[[input$data_choice]]))
@@ -322,7 +321,7 @@ server <- function(input, output) {
   
   
   
-
+  
   output$barplot <- renderPlotly({
     top1 <- merged_data$`Top 1% %`
     top5 <- merged_data$`Top 5% %`
@@ -460,10 +459,10 @@ server <- function(input, output) {
             strip.background = element_rect(colour = "black"))
     
   })
-#################################################################################
+  #################################################################################
 }
 
-  
+
 
 
 #############
