@@ -11,6 +11,7 @@ library(sf)
 library(openxlsx)
 library(dplyr)
 library(tidyr)
+library(shinyjs)
 
 ##################################
 # Data Pre-Processing and Loading
@@ -193,25 +194,20 @@ ui <- fluidPage(
                 fluidPage(
                   leafletOutput("birth_rate_map", height = "100vh"),
                   absolutePanel(top = 100, left = 40,
-                                selectInput(
-                                            "year", "Select Year:", 
-                                            choices=c('2011',
-                                                      '2012',
-                                                      '2013',
-                                                      '2014',
-                                                      '2015',
-                                                      '2016',
-                                                      '2017',
-                                                      '2018',
-                                                      '2019',
-                                                      '2020',
-                                                      '2021')),
+                                useShinyjs(),
+                                sliderInput(
+                                  "year", "Select Year:",
+                                  min = 2011,   # Minimum year value
+                                  max = 2021,   # Maximum year value
+                                  value = 2011, # Initial value
+                                  step = 1      # Step size (1 year)
+                                ),
+                                actionButton("start_stop", "Start"),
+                                textOutput("status"),
                                 # LGA selection dropdown
                                 selectInput("lga", "Select LGA:", 
                                             choices = unique(age_sex_male_data$LGA.name), 
-                                            selected = unique(age_sex_male_data$LGA.name)[1]),
-                                actionButton("play_pause", "Play/Pause"),
-                                sliderInput("speed", "Animation Speed (ms):", min = 3000, max = 10000, value = 4000)
+                                            selected = unique(age_sex_male_data$LGA.name)[1])
                    ),
                   tags$script('
                   $(document).ready(function() {
@@ -325,41 +321,55 @@ server <- function(input, output,session) {
   })
   
   ################ birth rate and gender age structure ########################
-  years <- c(2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021)  
-  current_year <- reactiveVal(min(years))  # Initialize with the first year
-  current_year <- reactiveVal(min(years))  # Initialize with the first year
-  is_animating <- reactiveVal(FALSE)  # Initialize with paused state
+  current_year <- reactiveVal(2011)
+  is_running <- reactiveVal(FALSE)
   
-  observeEvent(input$play_pause, {
-    if (is_animating()) {
-      # Animation is already running, stop it
-      is_animating(FALSE)
-    } else {
-      # Start the animation
-      is_animating(TRUE)
-      animate_years()
+  auto_increment_timer <- reactiveTimer(5000)  # 5 seconds timer
+  
+  observe({
+    if (is_running()) {
+      auto_increment_timer()  # Trigger the timer
     }
   })
   
-  animate_years <- function() {
-    observe({
-      if (is_animating()) {
-        # Calculate the new year
-        new_year <- as.numeric(current_year()) + 1
-        # Wrap around if necessary
-        if (new_year > max(as.numeric(years))) {
-          new_year <- min(as.numeric(years))
-        }
-        # Update the current year
-        current_year(as.character(new_year))
-        # Schedule the next update based on the chosen speed
-        invalidateLater(1000000, session)
-      }
-    })
-  }
+  observeEvent(auto_increment_timer(), {
+    if (current_year() < 2021) {
+      current_year(current_year() + 1)
+    } else {
+      is_running(FALSE)
+    }
+  })
+  
+  observeEvent(input$year, {
+    if (!is_running()) {
+      current_year(input$year)
+    }
+  })
+  
+  observeEvent(input$start_stop, {
+    if (!is_running()) {
+      is_running(TRUE)
+      updateActionButton(session, "start_stop", label = "Stop")
+    } else {
+      is_running(FALSE)
+      updateActionButton(session, "start_stop", label = "Start")
+    }
+  })
+  
+  output$status <- renderText({
+    if (is_running()) {
+      "Slider is running..."
+    } else {
+      "Slider is stopped."
+    }
+  })
+  
+  observe({
+    updateSliderInput(session, "year", value = current_year())
+  })
   
   output$birth_rate_map <- renderLeaflet({
-    target_col <- paste0("X", current_year(), "_rate")
+    target_col <- paste0("X", input$year, "_rate")
     print(target_col)
     pal <- colorNumeric(
       palette = "Blues",
