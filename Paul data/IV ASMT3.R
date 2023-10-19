@@ -14,41 +14,65 @@ jobs_salary_data <- read.csv("Number of Jobs and salary.csv", stringsAsFactors =
 
 total_data <- read.csv("Number of Jobs and salary.csv", header = TRUE)
 salary_data <- read.csv("Income By Gender and area.csv", header = TRUE)
+
 ##################
 # USER INTERFACE #
 ##################
 
+# ... [previous code] ...
+
 ui <- fluidPage(
+  tags$style(HTML("
+    body {
+      background-color: black;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .shiny-output-error {
+      display: none;
+    }
+  ")),
   titlePanel("Jobs and salary in Victoria by areas in 2019"),
   
   # Sidebar
-  div(style = "float: left; width: 40%;",  # This CSS will make the sidebar float to the left and occupy 20% width
-      sliderInput("lgaRange", 
-                  "Select LGA Rank Range:", 
-                  min = 1, 
-                  max = length(unique(jobs_salary_data$Lga)), 
-                  value = c(1, 10),
-                  step = 1),
-      selectInput("selected_LGA", "Select LGA:", choices = unique(jobs_salary_data$Lga)),
-      selectInput("selected_area", "Select Area:", choices = unique(industry_data$Area)),
-      girafeOutput("barChart"),
-      girafeOutput("lineChart")
+  div(style = "float: left; width: 25%;",  # This CSS will make the sidebar float to the left and occupy 25% width
+      div(
+        style = "margin-top: 300px;",   # Adjust this value to position the bar chart as per your preference
+        selectInput("selected_area", "More Specific Area:", choices = sort(unique(industry_data$Area))),
+        girafeOutput("barChart"),
+        girafeOutput("lineChart")
+      )
   ),
   
   # Main charts
-  # Main charts
-  div(style = "float: left; width: 60%;",  # This CSS will make the main content float to the left and occupy 80% width
+  div(style = "float: left; width: 75%;",  # This CSS will make the main content float to the left and occupy 75% width
+      div(
+        style = "margin-left: 350px;",
+        style = "margin-bottom: 10px;",  # Style adjustments for the slider
+        sliderInput("lgaRange", 
+                    "LGA Rank Range:", 
+                    min = 1, 
+                    max = length(unique(jobs_salary_data$Lga)), 
+                    value = c(1, 10),
+                    step = 1)
+      ),
       div(
         girafeOutput("rankedLgaChart"),
         style = "margin-bottom: 20px;"   # Adds a margin to the bottom of the first chart
       ),
+      div(
+        style = "margin-left: 400px;",   # Adjust this value to position the selectInput as per your preference
+        selectInput("selected_LGA", label = NULL, choices = sort(unique(jobs_salary_data$Lga)))
+      ),
       girafeOutput("interactiveBarChart")
   ),
-  
   
   # Clear float to ensure proper alignment of subsequent elements
   div(style = "clear: both;")
 )
+
+# ... [other code] ...
+
 
 
 
@@ -59,14 +83,7 @@ ui <- fluidPage(
 ################
 
 server <- function(input, output,session) {
-  clicked_area_reactive <- reactive({
-    input$clicked_area
-  })
-  
-  observe({
-    clicked_area <- input$clicked_area
-    print(clicked_area)
-  })
+  library(RColorBrewer)
   
   output$barChart <- renderGirafe({
     selected_data <- industry_data[industry_data$Area == input$selected_area, ]
@@ -79,26 +96,33 @@ server <- function(input, output,session) {
     # Create the tooltip_info column with same format as x-axis
     long_data$tooltip_info <- paste("Industry:", gsub("\\.", " ", long_data$variable), "<br>Jobs:", long_data$value)
     
-    p <- ggplot(long_data, aes(x=variable, y=value, tooltip=tooltip_info)) +  
-      geom_bar_interactive(stat="identity", aes(tooltip=tooltip_info, data_id=variable)) +
-      scale_fill_manual(values=rainbow(length(unique(long_data$variable)))) +
-      labs(title=paste("Jobs by Industry for", input$selected_area, "in 2019"), 
-           x="Industry", y="Number of Jobs") +
+    p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info, data_id = variable)) +  
+      geom_bar_interactive(stat = "identity", width = 0.6, position = "stack", alpha = 0.7) +  
+      coord_polar(theta = "y") + 
+      labs(title = paste("Jobs by Industry for", input$selected_area, "in 2019"), 
+           x = NULL, y = NULL) +
+      theme_void() +
       theme(
-        axis.text.x = element_text(angle=45, hjust=1, size=10, face="bold"),
-        axis.text.y = element_text(size=12),
-        axis.line.x = element_line(color="black", size=1),
-        legend.position = "none",
-        panel.border = element_rect(fill=NA, color="black"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank()
+        legend.position = "right",
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        legend.text = element_text(color = "white"),
+        legend.title = element_text(color = "white"),
+        plot.title = element_text(color = "white")
       ) +
-      scale_x_discrete(labels = function(x) gsub("\\.", " ", x))
+      scale_fill_viridis_d()  # 使用与径型柱状图相同的颜色调色板
     
-    girafe(ggobj=p, width=9, height=7, 
-           options=list(onclick="function(id){ alert('You clicked on: ' + id); }"))
+    girafe(ggobj = p, width = 9, height = 6.4, 
+           options = list(
+             tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
+             tooltip_offx = 0,
+             hover_opacity = 0.7,  # Highlight the bar when hovered
+             onclick = "function(id){ alert('You clicked on: ' + id); }"  # Display an alert with the clicked bar's id
+           ))
   })
+  
+  
+  
   output$interactiveBarChart <- renderGirafe({
     # Filter data based on selected LGA
     filtered_data <- subset(jobs_salary_data, Lga == input$selected_LGA)
@@ -114,25 +138,23 @@ server <- function(input, output,session) {
       coord_polar(start = 0) +  # Convert the bar chart to a radial bar chart
       scale_fill_viridis_d() +  # Apply a color palette
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10, face = "bold", color = "black"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 13, face = "bold", color = "white"),
         axis.ticks.y = element_blank(),  # Remove radial Y-axis ticks
         axis.text.y = element_blank(),  # Remove radial Y-axis text
         panel.grid.major = element_line(color = "grey80"),  # Add light grey radial grid lines
         panel.grid.minor = element_blank(),
-        panel.background = element_blank(),
-        panel.border = element_blank(),  # Remove border
+        axis.title = element_text(color = "white"),
+        axis.text = element_text(color = "white"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        panel.border = element_blank(),
+        plot.title = element_text(color = "white"),
         legend.position = "none"  # Hide legend
         
       ) +
       labs(y = NULL, x = NULL, title = paste("Specific Area Average Number of Jobs in", input$selected_LGA, "for 2019-20"))
     
-    girafe(ggobj = p, options = list(
-      height_svg = 5,
-      width_svg  = 7,
-      onclick = "function(id){
-               Shiny.setInputValue('clicked_area', id);
-             }"
-    ))
+    girafe(ggobj = p,  width = 15.0, height = 15.29)
   })
   
   
@@ -167,15 +189,16 @@ server <- function(input, output,session) {
            x = "Year",
            y = "Average salary and number of jobs") +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10, face = "bold"),
-        axis.text.y = element_blank(), # Hide y-axis text
-        axis.ticks.y = element_blank(), # Hide y-axis ticks
-        panel.grid.major = element_blank(), # Remove major grid
-        panel.grid.minor = element_blank(), # Remove minor grid
-        panel.background = element_blank(),
-        panel.border = element_rect(fill=NA, color="black") # Add border to plot
-      ) +
-      scale_color_manual(values = c("Jobs" = "blue", "Salary" = "red"))+
+        panel.grid.major = element_blank(),  # Remove major grid
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        text = element_text(color = "white"),
+        axis.title = element_text(color = "white"),
+        legend.text = element_text(color = "black"),
+        legend.title = element_text(color = "black"),
+        plot.title = element_text(color = "white")
+      )+
+      scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "red"))+
       scale_x_continuous(breaks = unique(combined_data$Year))
     
     
@@ -197,18 +220,22 @@ server <- function(input, output,session) {
     p <- ggplot(aggregated_data, aes(x = reorder(Lga, -TotalJobs), 
                                      y = TotalJobs,
                                      tooltip = tooltip_text, data_id = Lga)) + 
-      geom_bar_interactive(stat = "identity") +
+      geom_bar_interactive(stat = "identity", fill = "orange") +  # Set the bar color to dark blue
       coord_flip() +
       labs(y = "Total Number of Jobs", x = "LGA", title = "Number of Jobs in Selected LGAs in 2019-20") +
       theme_minimal() +
       theme(
+        text = element_text(color = "white"),
+        axis.title = element_text(color = "white"),
+        axis.text = element_text(color = "white"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
         panel.grid.major = element_blank(),  # Remove major grid
         panel.grid.minor = element_blank(),  # Remove minor grid
-        panel.background = element_blank(),  # Remove background
         panel.border = element_rect(fill=NA, color="black")  # Add border
       )
     
-    girafe(ggobj = p, width = 9, height = 7)
+    girafe(ggobj = p, width = 8, height = 7)
   })
   
   
