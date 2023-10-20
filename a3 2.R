@@ -191,13 +191,9 @@ ui <- fluidPage(
                       )
                    
              ),
-             tabPanel("Building approved by State",
+             tabPanel("Melbourne's Housing & Population Study",
                       div(id = "tableauVizContainer", style = "height:500px;"),
                       uiOutput("embedTableauViz")
-             ),
-             tabPanel("Road infrastructure development",
-                      div(id = "tableauVizRoad", style = "height:500px;"),
-                      uiOutput("embedTableauVizRoad")
              ),
              tabPanel("Population",
                       fluidPage(
@@ -484,6 +480,32 @@ server <- function(input, output,session) {
                                                                 "background-color" = "transparent", 
                                                                 "color" = "black"))
       )
+  })
+  
+  output$embedTableauViz <- renderUI({
+    # 在此处指定 Tableau viz 的 URL
+    viz_url <- "https://public.tableau.com/views/V2_16977821675040/AnalysisofDwellingsFloorSpaceandPopulationTrendsinMelbourne2021-2041?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
+    
+    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
+    script <- sprintf('
+    <script>
+      function initViz() {
+        var containerDiv = document.getElementById("tableauVizContainer");
+        var vizUrl = "%s";
+        var options = {
+          hideTabs: true, // 隐藏 Tableau 选项卡
+          width: "1920px",  // 设置宽度
+          height: "1050px"  // 设置高度
+        };
+        
+        var viz = new tableau.Viz(containerDiv, vizUrl, options);
+      }
+      initViz();
+    </script>
+  ', viz_url)
+    
+    # 返回 script
+    HTML(script)
   })
   
   output$genderAgePlot <- renderPlotly({
