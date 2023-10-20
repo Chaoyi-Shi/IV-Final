@@ -150,7 +150,7 @@ ui <- navbarPage(
                             margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
                           }
                         ")),
-             leafletOutput("income_map", height = "100vh"),
+             leafletOutput("map", height = "100vh"),
              tags$div(
                style = "position: absolute; top: 60px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                selectInput("data_choice", "Select Data:", 
@@ -208,7 +208,7 @@ server <- function(input, output,session) {
   # 创建一个reactiveVal存储选定的LGA名字
   selected_LGA <- reactiveVal(NULL)
   
-  output$income_map <- renderLeaflet({
+  output$map <- renderLeaflet({
     # Create a color palette based on user's choice
     pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
     
@@ -530,6 +530,7 @@ server <- function(input, output,session) {
   })
   #################################################################################
 }
+
 
 
 
