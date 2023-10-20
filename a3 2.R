@@ -192,8 +192,38 @@ ui <- navbarPage(
              ),
              absolutePanel(top = 220, left = 40, width = 550, height = 650, plotlyOutput("genderAgePlot"))
            )
+  ),
+  # Define the "About" dropdown menu
+  aboutMenu <- navbarMenu(
+    "About",
+    tabPanel(
+      "Assingment2 Description",
+      br(),
+      h1(HTML("<b>Assingment2 Description</b>"), style = "text-align:center"),
+      br(),
+      span(h4("This project consists of a visualization and analysis of COVID-19 
+            outbreaks throughout the American continent. To begin with, R 
+            libraries were prepared and datasets related to the outbreak were 
+            loaded, including cases of COVID-19 reported from countries across 
+            each continent and deaths reported from US states. Filtering, 
+            summarizing, and grouping the outbreak data were part of the data 
+            processing phase. It is designed with multiple tabs (for example, 
+            distribution of cases by country, intensity and growth rate of the 
+            outbreak, number of deaths by state) for interactive viewing. A 
+            variety of visualizations are dynamically rendered on the Shiny server 
+            side (e.g., bar charts, maps, and line graphs). Furthermore, 
+            the project contains links to data sources and descriptions of the visualizations.")),
+      br(),
+      img(src = "https://www.psa.org.au/wp-content/uploads/2020/04/CVOID_Cover.png", height = 300, width = 600,class="centered-image"), # 你可以根据需要调整height和width的值
+      tags$style(HTML("
+    .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+  ")),
+    )
   )
-  
 )
 
 
