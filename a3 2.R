@@ -13,7 +13,7 @@ library(dplyr)
 library(tidyr)
 library(shinydashboard)
 library(RColorBrewer)
-
+library(reshape2)
 ##################################
 # Data Pre-Processing and Loading
 ##################################
@@ -46,13 +46,20 @@ age_sex_male_data <- age_sex_male_data %>%
 age_sex_female_data <- age_sex_female_data %>%
   filter_all(all_vars(. != "None" & . != "NA"))
 
-
 # Load the merged data
 merged_data <- readxl::read_excel("data/modified_victoria_income_geo_data.xlsx")
 geo_data <- geojsonio::geojson_read("data/cleaned_VIC_LGA.geojson", what = "sp")
 spdf <- SpatialPolygonsDataFrame(geo_data, merged_data)
 centroids <- gCentroid(spdf, byid=TRUE)
 
+### Salary and jobs data
+industry_data <- read.csv("data/Number of jobs by Industry 2019.csv", header = TRUE)
+industry_data["Area"] = industry_data["X.Area"] 
+industry_data$Area <- gsub("^X\\.", "", industry_data$Area)
+jobs_salary_data <- read.csv("data/Number of Jobs and salary.csv", stringsAsFactors = FALSE)
+
+total_data <- read.csv("data/Number of Jobs and salary.csv", header = TRUE)
+salary_data <- read.csv("data/Income By Gender and area.csv", header = TRUE)
 
 ##################
 # USER INTERFACE #
@@ -150,9 +157,9 @@ ui <- navbarPage(
                             margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
                           }
                         ")),
-             leafletOutput("map", height = "100vh"),
+             leafletOutput("map", height = "70vh"),
              tags$div(
-               style = "position: absolute; top: 60px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
+               style = "position: absolute; top: 70px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                selectInput("data_choice", "Select Data:", 
                            choices = c("Mean Income" = "Mean $",
                                        "Median Income" = "Median $",
@@ -160,20 +167,20 @@ ui <- navbarPage(
                                        "Number of Earners" = "Earners (persons)"))
              ),
              tags$div(
-               style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px; background-color: rgba(255, 255, 255, 0);", 
+               style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 300px; background-color: rgba(255, 255, 255, 0);", 
                plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
                plotlyOutput("barplot")         # Selected LGA's pie chart
              )
              ,
              tags$div(
-               style = "position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px;",
+               style = "position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 400px;",
                plotlyOutput("comparison_plot"),
              )
            )
   ),
   
   # Melbourne's Housing & Population Study Tab
-  tabPanel("Melbourne's Housing & Population Study",
+  tabPanel(" Housing & Population Study",
            div(id = "tableauVizContainer", style = "height:500px;"),
            uiOutput("embedTableauViz")
   ),
@@ -191,6 +198,40 @@ ui <- navbarPage(
                            actionButton("start_stop", "Start The Animation")
              ),
              absolutePanel(top = 220, left = 40, width = 550, height = 650, plotlyOutput("genderAgePlot"))
+           )
+  ),
+  tabPanel("Job & Salary", 
+           absolutePanel(
+             top=60, left = 40,
+             selectInput(inputId = "selectedYear", label = "Select Year", 
+                         choices = c("2016-17" = "X2016.17", 
+                                     "2017-18" = "X2017.18", 
+                                     "2018-19" = "X2018.19", 
+                                     "2019-20" = "X2019.20"),
+                         selected = "X2019.20")
+             
+             
+           ),
+           absolutePanel(
+             top=40, left = 400,
+             selectInput("selected_area", "More Specific Area: Statistic Area Level 2", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
+           ),
+           absolutePanel(
+             top=150, left = 40, width =600, height= 400,
+             girafeOutput("rankedLgaChart")
+           ),
+           absolutePanel(
+             top=100, left = 800, width =400, height= 400,
+             girafeOutput("interactiveBarChart")
+           ),
+           absolutePanel(
+             top=450, left = 40, width =600, height= 400,
+             girafeOutput("job_pie_chart")
+           ),
+           absolutePanel(
+             top=450, left = 700, width =600, height= 400,
+             girafeOutput("combinedLineChart")
+             
            )
   ),
   # Define the "About" dropdown menu
@@ -318,17 +359,20 @@ server <- function(input, output,session) {
     # Get Melbourne's data
     melbourne_data <- merged_data[merged_data$`LGA NAME` == "MELBOURNE", c("Lowest Quartile %", "Second Quartile %", "Third Quartile %", "Highest Quartile %")]
     
+    # Define a vector of colors you wish to use for your pie slices
+    colors_vector <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")  # Replace with your desired colors
+    
     p <- plot_ly(melbourne_data, 
                  labels = ~names(melbourne_data), 
                  values = ~unlist(melbourne_data), 
                  type = 'pie', 
                  hole = 0.6,
-                 marker = list(line = list(color = "#FFFFFF", width = 2)), 
+                 marker = list(colors = colors_vector, line = list(color = "#FFFFFF", width = 2)),
                  hoverinfo = 'label+percent', 
                  textinfo = 'percent',
                  hoveron = 'points+fills', 
                  insidetextfont = list(color = 'white')
-    ) %>%
+    )%>%
       layout(title = list(text = "Melbourne Income Quartile Distribution", x = 0.5, y = 1.05, font = list(size = 14, color = "white")), 
              margin = list(l = 20, r = 20, b = 20, t = 60), 
              legend = list(font = list(size = 10, color = "white"), x = 0.32, y = 0.45, bgcolor = "rgba(0,0,0,0)"),
@@ -358,11 +402,11 @@ server <- function(input, output,session) {
     comparison_data <- merged_data[merged_data$`LGA NAME` %in% c(selected_LGA(), "MELBOURNE"), ]
     
     # 使用plot_ly创建对比图
-    p <- plot_ly(data = comparison_data, x = ~`LGA NAME`, y = ~`Top 1% %`, type = "bar", name = "Top 1%", marker = list(color = "lightblue"))
+    p <- plot_ly(data = comparison_data, x = ~`LGA NAME`, y = ~`Top 1% %`, type = "bar", name = "Top 1%", marker = list(color = "#c5e0fa"))
     
-    p <- p %>% add_trace(y = ~`Top 5% %`, name = "Top 5%", marker = list(color = "lightcoral"))
+    p <- p %>% add_trace(y = ~`Top 5% %`, name = "Top 5%", marker = list(color = "#74b3f2"))
     
-    p <- p %>% add_trace(y = ~`Top 10% %`, name = "Top 10%", marker = list(color = "lightgreen"))
+    p <- p %>% add_trace(y = ~`Top 10% %`, name = "Top 10%", marker = list(color = "#1887f5"))
     
     p %>% layout(barmode = 'group',
                  title = list(text = "Comparison of Selected LGA and Melbourne", font = list(color = "white")),
@@ -478,6 +522,7 @@ server <- function(input, output,session) {
         label = ~as.character(get(target_col)),
         labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "28px",
                                                                 "background-color" = "transparent", 
+                                                                "border" = "2px",
                                                                 "color" = "black"))
       )
   })
@@ -539,7 +584,7 @@ server <- function(input, output,session) {
       ggplot(combined_data_long, aes(x = Age_Group_Sort, y = Population, fill = Gender, text = paste("Age Group: ", Age_Group, "<br>Population: ", abs(Population)))) +
         geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
         scale_y_continuous(labels = abs, expand = c(0, 0)) +
-        scale_fill_manual(values = c("Male" = "#68b9f7", "Female" = "pink"), name = "") +
+        scale_fill_manual(values = c("Male" = "#bbeafc", "Female" = "pink"), name = "") +
         coord_flip() +
         facet_wrap(. ~ Gender, scale = "free_x", strip.position = "bottom") +
         labs(title = "Age-Gender Pyramid",
@@ -559,6 +604,197 @@ server <- function(input, output,session) {
     
   })
   #################################################################################
+  
+  # job and salary panel start
+  output$combinedLineChart <- renderGirafe({
+    
+    # --- First Part: Preparing selected area data ---
+    selected_total_data <- total_data[total_data$Area == input$selected_area, ]
+    long_total_data <- melt(selected_total_data, id.vars = "Area")
+    long_total_data$type <- "Jobs"
+    long_total_data <- long_total_data[long_total_data$variable != "Lga", ]
+    
+    selected_salary_data <- salary_data[salary_data$Area == input$selected_area, ]
+    long_salary_data <- melt(selected_salary_data, id.vars = "Area")
+    long_salary_data$type <- "Salary"
+    long_salary_data <- long_salary_data[long_salary_data$variable != "Lga", ]
+    
+    combined_total_data <- rbind(long_total_data, long_salary_data)
+    combined_total_data$value <- gsub(",", "", combined_total_data$value)
+    combined_total_data$value <- as.numeric(combined_total_data$value)
+    combined_total_data$Year <- as.numeric(gsub("^X(\\d{4}).*", "\\1", combined_total_data$variable))
+    combined_total_data$Source <- "Selected Area"
+    
+    # --- Second Part: Preparing Melbourne data ---
+    melbourne_total_data <- total_data[total_data$Lga == "Melbourne", ]
+    melbourne_salary_data <- salary_data[salary_data$Lga == "Melbourne", ]
+    numeric_total_data <- apply(melbourne_total_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
+    numeric_salary_data <- apply(melbourne_salary_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
+    avg_job_melbourne <- colMeans(numeric_total_data, na.rm = TRUE) / 10
+    avg_salary_melbourne <- colMeans(numeric_salary_data, na.rm = TRUE)
+    
+    combined_data_melbourne <- data.frame(
+      Year = rep(2015:2019, 2),
+      Type = factor(c(rep("Jobs", 5), rep("Salary", 5)), levels = c("Jobs", "Salary")),
+      Value = c(avg_job_melbourne, avg_salary_melbourne),
+      Source = "Melbourne"
+    )
+    
+    # Adjusting combined_total_data
+    adjusted_total_data <- combined_total_data %>%
+      select(Year, type, value, Source) %>%
+      rename(Type = type, Value = value)
+    
+    # Now, rbind the two datasets together
+    all_data <- rbind(adjusted_total_data, combined_data_melbourne)
+    
+    # --- Plotting ---
+    # --- Plotting ---
+    p_combined <- ggplot(all_data, aes(x = Year, y = Value, color = Type, group = interaction(Type, Source))) +
+      geom_line(size = 1) +  # Adjusting size here to make line thinner
+      geom_point() +
+      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 5) +
+      facet_wrap(~ Source, scales = "free_y") +
+      labs(title = "Average Jobs and Salary (2015-2019)",
+           x = NULL,
+           y = "Average value") +
+      theme(
+        panel.grid.major = element_blank(),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        text = element_text(color = "white"),
+        axis.text.x = element_text(color = "white", size = 16),
+        axis.text.y = element_text(color = "white", size = 16),
+        axis.title = element_text(color = "white"),
+        legend.text = element_text(color = "black"),
+        legend.title = element_text(color = "black"),
+        plot.title = element_text(color = "white", size = 20)
+      ) +
+      scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "lightpink"))
+      girafe(ggobj = p_combined, width = 9, height = 7)
+  })
+  
+  set3_colors <- brewer.pal(12, "Set3")
+  pastel1_colors <- brewer.pal(9, "Pastel1")
+  pastel2_colors <- brewer.pal(8, "Pastel2")
+  combined_palette <- c(set3_colors, pastel1_colors, pastel2_colors[1:7])  # We need 7 colors from Pastel2 to get a total of 19
+  
+  output$job_pie_chart <- renderGirafe({
+    selected_data <- industry_data[industry_data$Area == input$selected_area, ]
+    selected_data <- na.omit(selected_data)  # Remove rows with NA values
+    long_data <- melt(selected_data, id.vars="Area")
+    
+    # Filter out Lga variable
+    long_data <- long_data[!long_data$variable %in% c("X.Area", "Lga", "Total"), ]
+    
+    # Create the tooltip_info column with same format as x-axis
+    long_data$tooltip_info <- paste("Industry:", gsub("\\.", " ", long_data$variable), "<br>Jobs:", long_data$value)
+    
+    p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info, data_id = variable)) +  
+      geom_bar_interactive(stat = "identity", width = 0.6, position = "stack", alpha = 0.7) +  
+      coord_polar(theta = "y") + 
+      labs(title = paste("Number of Jobs in different Industry in 2019"), 
+           x = NULL, y = NULL) +
+      theme_void() +
+      theme(
+        legend.position = "left",
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        legend.text = element_text(color = "white", size = 25),
+        plot.title = element_text(color = "white",size= 25)
+      ) +
+      scale_fill_manual(values = combined_palette)
+    
+    girafe(ggobj = p, width = 16, height = 9, 
+           options = list(
+             tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
+             tooltip_offx = 0,
+             hover_opacity = 0.7,  # Highlight the bar when hovered
+             onclick = "function(id){ alert('You clicked on: ' + id); }"  # Display an alert with the clicked bar's id
+           ))
+  })
+  
+  
+  output$interactiveBarChart <- renderGirafe({
+    # Obtain the selected year from the input
+    selected_column <- input$selectedYear
+    
+    # Filter data
+    filtered_data <- subset(jobs_salary_data, Lga == "Melbourne")
+    
+    # Ensure the selected_column exists in the dataframe
+    if (!selected_column %in% names(filtered_data)) {
+      return(NULL)
+    }
+    
+    # Add a tooltip column
+    filtered_data$tooltip_info <- paste("Area:", filtered_data$Area, 
+                                        "<br>Jobs:", as.numeric(gsub(",", "", filtered_data[[selected_column]])))
+    
+    # Plotting
+    p <- ggplot(filtered_data, aes(x = Area, y = as.numeric(gsub(",", "", filtered_data[[selected_column]])), 
+                                   tooltip = tooltip_info, data_id = Area, fill = Area)) +
+      geom_bar_interactive(stat = "identity") +
+      coord_polar(start = 0) +
+      scale_fill_viridis_d() +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 25, face = "bold", color = "white"),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid.major = element_line(color = "grey80"),
+        panel.grid.minor = element_blank(),
+        axis.title = element_text(color = "white"),
+        axis.text = element_text(color = "white"),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        panel.border = element_blank(),
+        plot.title = element_text(color = "white", size = 30),
+        legend.position = "none"
+      ) +
+      labs(y = NULL, x = NULL, title = ("Specific Area Average Number of Jobs in Melbourne"))
+    
+    girafe(ggobj = p, width = 10, height = 10)
+  })
+  
+  selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
+                     "Maribyrnong", "Monash", "Melbourne", "Moonee Valley", "Moreland",
+                     "Port Phillip", "Stonnington", "Whitehorse", "Yarra")
+  
+  output$rankedLgaChart <- renderGirafe({
+    # Group by LGA and sum the number of jobs
+    selected_column <- input$selectedYear
+    
+    # Group by LGA and sum the number of jobs
+    aggregated_data <- jobs_salary_data %>%
+      filter(Lga %in% selected_lgas) %>%
+      group_by(Lga) %>%
+      summarise(TotalJobs = sum(as.numeric(gsub(",", "", !!sym(selected_column)))))
+    
+    # Adding tooltip to show number of jobs
+    aggregated_data$tooltip_text <- paste(aggregated_data$Lga, ": ", aggregated_data$TotalJobs, " jobs")
+    
+    p <- ggplot(aggregated_data, aes(x = reorder(Lga, -TotalJobs), 
+                                     y = TotalJobs, tooltip = tooltip_text, data_id = Lga)) + 
+      geom_bar_interactive(stat = "identity", aes(fill = ifelse(Lga == "Melbourne", "Melbourne", "Others"))) +  # Conditional fill with tooltips
+      scale_fill_manual(values = c("Melbourne" = "lightpink", "Others" = "#bbeafc")) +  # Manual color assignment for Melbourne
+      labs(y = "Total Number of Jobs", x = "LGA", title = "Average Number of Jobs in Melbourne and surrounding LGA") +
+      theme_minimal() +
+      theme(
+        text = element_text(color = "white"),
+        axis.title = element_text(color = "white"),
+        axis.text = element_text(color = "white"),
+        axis.text.x = element_text(angle = 45, hjust = 1, color = "white"), # Rotate x-axis labels by 45 degrees
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        panel.grid.major = element_blank(),  # Remove major grid
+        panel.grid.minor = element_blank(),  # Remove minor grid
+        panel.border = element_rect(fill=NA, color="black"),  # Add border
+        legend.position = "none"  # Remove legend
+      )
+    
+    girafe(ggobj = p, width = 8, height = 4)
+    
+  })
 }
 
 
