@@ -238,44 +238,51 @@ ui <- fluidPage(
                   )
                   
                 ),
-       tabPanel("Jobs and salary in Victoria by areas in 2019",
-                tags$div("LGA: Local Government Area", style = "position: absolute; top: 60px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
-                tags$div("More Specific Area: Statistic Area Level 2", style = "position: absolute; top: 90px; left: 10px; color: white; font-size: 24px; z-index: 100;"),  # Add this line
-                # Sidebar
-                div(style = "float: left; width: 25%;",  # This CSS will make the sidebar float to the left and occupy 25% width
-                    div(
-                      style = "margin-top: 300px;",   # Adjust this value to position the bar chart as per your preference
-                      selectInput("selected_area", "More Specific Area:", choices = sort(unique(industry_data$Area))),
-                      girafeOutput("barChart"),
-                      girafeOutput("lineChart")
-                    )
-                ),
-                
-                # Main charts
-                div(style = "float: left; width: 75%;",  # This CSS will make the main content float to the left and occupy 75% width
-                    div(
-                      style = "margin-left: 350px;",
-                      style = "margin-bottom: 10px;",  # Style adjustments for the slider
-                      sliderInput("lgaRange", 
-                                  "LGA Rank Range:", 
-                                  min = 1, 
-                                  max = length(unique(jobs_salary_data$Lga)), 
-                                  value = c(1, 10),
-                                  step = 1)
+       tabPanel(tags$div("LGA: Local Government Area"),  # Add this line
+                tags$div("More Specific Area: Statistic Area Level 2"),  # Add this line
+                tags$style(HTML("
+    body {
+      background-color: black;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    .shiny-output-error {
+      display: none;
+    }
+    #yearFilterDiv {
+      margin-bottom: 10px;
+      background-color: #333;
+      padding: 5px;
+      border-radius: 5px;
+    }
+    #sideBarPanel {
+      background-color: #222;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  ")),
+                titlePanel("Employment and salary condition in City of Melbourne"),
+                sidebarLayout(
+                  sidebarPanel(
+                    id = "sideBarPanel",
+                    selectInput("selected_area", "More Specific Area:", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"]))),
+                    girafeOutput("barChart"),
+                    girafeOutput("lineChart"),
+                    girafeOutput("lineChartMelbourneAverage")
+                  ),
+                  mainPanel(
+                    tags$div(id = "yearFilterDiv", 
+                             selectInput(inputId = "selectedYear", label = "Select Year", 
+                                         choices = c("2016.17" = "X2016.17", 
+                                                     "2017.18" = "X2017.18", 
+                                                     "2018.19" = "X2018.19", 
+                                                     "2019.20" = "X2019.20"),
+                                         selected = "X2019.20")
                     ),
-                    div(
-                      girafeOutput("rankedLgaChart"),
-                      style = "margin-bottom: 20px;"   # Adds a margin to the bottom of the first chart
-                    ),
-                    div(
-                      style = "margin-left: 400px;",   # Adjust this value to position the selectInput as per your preference
-                      selectInput("selected_LGA", label = NULL, choices = sort(unique(jobs_salary_data$Lga)))
-                    ),
+                    girafeOutput("rankedLgaChart"),
                     girafeOutput("interactiveBarChart")
-                ),
-                
-                # Clear float to ensure proper alignment of subsequent elements
-                div(style = "clear: both;"))
+                  ))
+                )
        )
 )
 
@@ -441,7 +448,13 @@ server <- function(input, output) {
     
   })
 #################################################################################
+  
   library(RColorBrewer)
+  
+  set3_colors <- brewer.pal(12, "Set3")
+  pastel1_colors <- brewer.pal(9, "Pastel1")
+  pastel2_colors <- brewer.pal(8, "Pastel2")
+  combined_palette <- c(set3_colors, pastel1_colors, pastel2_colors[1:7])  # We need 7 colors from Pastel2 to get a total of 19
   
   output$barChart <- renderGirafe({
     selected_data <- industry_data[industry_data$Area == input$selected_area, ]
@@ -457,20 +470,19 @@ server <- function(input, output) {
     p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info, data_id = variable)) +  
       geom_bar_interactive(stat = "identity", width = 0.6, position = "stack", alpha = 0.7) +  
       coord_polar(theta = "y") + 
-      labs(title = paste("Jobs by Industry for", input$selected_area, "in 2019"), 
+      labs(title = paste("Number of Jobs in different Industry in 2019"), 
            x = NULL, y = NULL) +
       theme_void() +
       theme(
-        legend.position = "right",
+        legend.position = "left",
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
-        legend.text = element_text(color = "white"),
-        legend.title = element_text(color = "white"),
-        plot.title = element_text(color = "white")
+        legend.text = element_text(color = "white", size = 25),
+        plot.title = element_text(color = "white",size= 25)
       ) +
-      scale_fill_viridis_d()  # 使用与径型柱状图相同的颜色调色板
+      scale_fill_manual(values = combined_palette)
     
-    girafe(ggobj = p, width = 9, height = 6.4, 
+    girafe(ggobj = p, width = 16, height = 9, 
            options = list(
              tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
              tooltip_offx = 0,
@@ -482,37 +494,44 @@ server <- function(input, output) {
   
   
   output$interactiveBarChart <- renderGirafe({
-    # Filter data based on selected LGA
-    filtered_data <- subset(jobs_salary_data, Lga == input$selected_LGA)
+    # Obtain the selected year from the input
+    selected_column <- input$selectedYear
+    
+    # Filter data
+    filtered_data <- subset(jobs_salary_data, Lga == "Melbourne")
+    
+    # Ensure the selected_column exists in the dataframe
+    if (!selected_column %in% names(filtered_data)) {
+      return(NULL)
+    }
     
     # Add a tooltip column
     filtered_data$tooltip_info <- paste("Area:", filtered_data$Area, 
-                                        "<br>Jobs:", as.numeric(gsub(",", "", filtered_data$X2019.20)))
+                                        "<br>Jobs:", as.numeric(gsub(",", "", filtered_data[[selected_column]])))
     
     # Plotting
-    p <- ggplot(filtered_data, aes(x = Area, y = as.numeric(gsub(",", "", `X2019.20`)), 
+    p <- ggplot(filtered_data, aes(x = Area, y = as.numeric(gsub(",", "", filtered_data[[selected_column]])), 
                                    tooltip = tooltip_info, data_id = Area, fill = Area)) +
       geom_bar_interactive(stat = "identity") +
-      coord_polar(start = 0) +  # Convert the bar chart to a radial bar chart
-      scale_fill_viridis_d() +  # Apply a color palette
+      coord_polar(start = 0) +
+      scale_fill_viridis_d() +
       theme(
-        axis.text.x = element_text(angle = 45, hjust = 1, size = 10, face = "bold", color = "white"),
-        axis.ticks.y = element_blank(),  # Remove radial Y-axis ticks
-        axis.text.y = element_blank(),  # Remove radial Y-axis text
-        panel.grid.major = element_line(color = "grey80"),  # Add light grey radial grid lines
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 20, face = "bold", color = "white"),
+        axis.ticks.y = element_blank(),
+        axis.text.y = element_blank(),
+        panel.grid.major = element_line(color = "grey80"),
         panel.grid.minor = element_blank(),
         axis.title = element_text(color = "white"),
         axis.text = element_text(color = "white"),
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
         panel.border = element_blank(),
-        plot.title = element_text(color = "white"),
-        legend.position = "none"  # Hide legend
-        
+        plot.title = element_text(color = "white", size = 30),
+        legend.position = "none"
       ) +
-      labs(y = NULL, x = NULL, title = paste("Specific Area Average Number of Jobs in", input$selected_LGA, "for 2019-20"))
+      labs(y = NULL, x = NULL, title = ("Specific Area Average Number of Jobs in Melbourne for"))
     
-    girafe(ggobj = p,  width = 9, height = 9.3)
+    girafe(ggobj = p, width = 15.0, height = 15.51)
   })
   
   
@@ -541,46 +560,52 @@ server <- function(input, output) {
     # Extract year from the variable and remove non-year characters
     combined_data$Year <- as.numeric(gsub("^X(\\d{4}).*", "\\1", combined_data$variable))
     p_total <- ggplot(combined_data, aes(x = Year, y = value, group = interaction(Area, type), color = type)) +
-      geom_line(aes(group = interaction(Area, type))) + # Use geom_line instead of geom_line_interactive to make it not clickable
-      geom_text(aes(label = value), vjust = -0.5) + # Add labels to each data point
+      geom_line(aes(group = interaction(Area, type))) + 
+      geom_text(aes(label = value), vjust = -0.5,size = 6) + 
       labs(title = paste("Average Jobs and Salary in", input$selected_area, "from 2015 to 2019"),
-           x = "Year",
+           x = NULL,
            y = "Average salary and number of jobs") +
       theme(
-        panel.grid.major = element_blank(),  # Remove major grid
+        panel.grid.major = element_blank(),
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
         text = element_text(color = "white"),
+        axis.text.x = element_text(color = "white", size = 14),  # Adjusting x-axis text
+        axis.text.y = element_text(color = "white", size = 14),  # Adjusting y-axis text
         axis.title = element_text(color = "white"),
         legend.text = element_text(color = "black"),
         legend.title = element_text(color = "black"),
-        plot.title = element_text(color = "white")
-      )+
-      scale_color_manual(values = c("Jobs" = "blue", "Salary" = "red"))+
+        plot.title = element_text(color = "white",size = 20)
+      ) +
+      scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "red")) +
       scale_x_continuous(breaks = unique(combined_data$Year))
     
     
     girafe(ggobj = p_total, width = 9, height = 7)
   })
+  selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
+                     "Maribyrnong", "Monash", "Melbourne", "Moonee Valley", "Moreland",
+                     "Port Phillip", "Stonnington", "Whitehorse", "Yarra")
+  
   output$rankedLgaChart <- renderGirafe({
     # Group by LGA and sum the number of jobs
-    aggregated_data <- jobs_salary_data %>%
-      group_by(Lga) %>%
-      summarise(TotalJobs = sum(as.numeric(gsub(",", "", `X2019.20`)), na.rm = TRUE)) %>%
-      arrange(-TotalJobs)
+    selected_column <- input$selectedYear
     
-    # Filter based on the LGA rank range
-    aggregated_data <- aggregated_data[input$lgaRange[1]:input$lgaRange[2], ]
+    # Group by LGA and sum the number of jobs
+    aggregated_data <- jobs_salary_data %>%
+      filter(Lga %in% selected_lgas) %>%
+      group_by(Lga) %>%
+      summarise(TotalJobs = sum(as.numeric(gsub(",", "", !!sym(selected_column)))))
     
     # Adding tooltip to show number of jobs
     aggregated_data$tooltip_text <- paste(aggregated_data$Lga, ": ", aggregated_data$TotalJobs, " jobs")
     
     p <- ggplot(aggregated_data, aes(x = reorder(Lga, -TotalJobs), 
-                                     y = TotalJobs,
-                                     tooltip = tooltip_text, data_id = Lga)) + 
-      geom_bar_interactive(stat = "identity", fill = "orange") +  # Set the bar color to dark blue
+                                     y = TotalJobs, tooltip = tooltip_text, data_id = Lga)) + 
+      geom_bar_interactive(stat = "identity", aes(fill = ifelse(Lga == "Melbourne", "Melbourne", "Others"))) +  # Conditional fill with tooltips
+      scale_fill_manual(values = c("Melbourne" = "blue", "Others" = "orange")) +  # Manual color assignment for Melbourne
       coord_flip() +
-      labs(y = "Total Number of Jobs", x = "LGA", title = "Number of Jobs in Selected LGAs in 2019-20") +
+      labs(y = "Total Number of Jobs", x = "LGA", title = "Average Number of Jobs in Melbourne and surrounding LGA") +
       theme_minimal() +
       theme(
         text = element_text(color = "white"),
@@ -590,12 +615,60 @@ server <- function(input, output) {
         panel.background = element_rect(fill = "black"),
         panel.grid.major = element_blank(),  # Remove major grid
         panel.grid.minor = element_blank(),  # Remove minor grid
-        panel.border = element_rect(fill=NA, color="black")  # Add border
+        panel.border = element_rect(fill=NA, color="black"),  # Add border
+        legend.position = "none"  # Remove legend
       )
     
     girafe(ggobj = p, width = 8, height = 7)
   })
+  output$lineChartMelbourneAverage <- renderGirafe({
+    # Filter data for Melbourne Lga
+    melbourne_total_data <- total_data[total_data$Lga == "Melbourne", ]
+    melbourne_salary_data <- salary_data[salary_data$Lga == "Melbourne", ]
+    
+    # Convert columns to numeric after removing non-numeric characters
+    numeric_total_data <- apply(melbourne_total_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
+    numeric_salary_data <- apply(melbourne_salary_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
+    
+    # Calculate the yearly average for job numbers and salary
+    avg_job_melbourne <- colMeans(numeric_total_data, na.rm = TRUE)
+    avg_salary_melbourne <- colMeans(numeric_salary_data, na.rm = TRUE)
+    
+    # Combine into a single data frame for plotting
+    combined_data <- data.frame(
+      Year = rep(2015:2019, 2),
+      Type = factor(c(rep("Jobs", 5), rep("Salary", 5)), levels = c("Jobs", "Salary")),
+      Value = c(avg_job_melbourne, avg_salary_melbourne)
+    )
+    
+    # Plot the data
+    p_melbourne_avg <- ggplot(combined_data, aes(x = Year, y = Value, color = Type, group = Type)) +
+      geom_line() +
+      geom_point() +
+      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 4) +
+      labs(title = "Average Jobs and Salary in Lga of Melbourne (2015-2019)",
+           x = NULL,
+           y = "Average value") +
+      theme(
+        panel.grid.major = element_blank(),
+        plot.background = element_rect(fill = "black"),
+        panel.background = element_rect(fill = "black"),
+        text = element_text(color = "white"),
+        axis.text.x = element_text(color = "white", size = 14),
+        axis.text.y = element_text(color = "white", size = 14),
+        axis.title = element_text(color = "white"),
+        legend.text = element_text(color = "black"),
+        legend.title = element_text(color = "black"),
+        plot.title = element_text(color = "white", size = 20)
+      ) +
+      scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "red"))
+    
+    girafe(ggobj = p_melbourne_avg, width = 9, height = 7)
+  })
   
+  
+  
+
   
 }
 
