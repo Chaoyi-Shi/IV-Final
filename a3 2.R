@@ -142,27 +142,33 @@ ui <- navbarPage(
   tabPanel("Income Map", id = "income-map-tab",
            fluidPage(
              fluidRow(
-               column(width = 4, valueBoxOutput("LGA_Name"), 
-                      div(class = "income-box", valueBoxOutput("Income"))
-               )
+               column(width = 6, valueBoxOutput("LGA_Name")),
+               column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
              ),
              tags$style(HTML("
-               .income-box {
-                 margin-left: 40px;  
-               }
-             ")),
-             leafletOutput("income_map", height = "80vh"),
+                          .income-box {
+                            margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
+                          }
+                        ")),
+             leafletOutput("income_map", height = "100vh"),
              tags$div(
-               style = "position: absolute; top: 70px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
+               style = "position: absolute; top: 60px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                selectInput("data_choice", "Select Data:", 
                            choices = c("Mean Income" = "Mean $",
                                        "Median Income" = "Median $",
                                        "Gini Coefficient" = "Gini coefficient coef.",
-                                       "Number of Earners" = "Earners (persons)")
-               )
+                                       "Number of Earners" = "Earners (persons)"))
              ),
-             absolutePanel(top = 50, left = 50, width = 600, height = 500, plotlyOutput("melbourne_pie")),
-             absolutePanel(top = 100, left = 700, width = 600, height = 500, plotlyOutput("barplot"))
+             tags$div(
+               style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px; background-color: rgba(255, 255, 255, 0);", 
+               plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
+               plotlyOutput("barplot")         # Selected LGA's pie chart
+             )
+             ,
+             tags$div(
+               style = "position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px;",
+               plotlyOutput("comparison_plot"),
+             )
            )
   ),
   
