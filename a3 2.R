@@ -165,48 +165,43 @@ ui <- fluidPage(
     
   ")),
   navbarPage("",
-             tabPanel("Population Income and Building Approvals", id = "combined-tab",
+             tabPanel("Income Map", id = "income-map-tab",
                       fluidPage(
                         fluidRow(
                           column(width = 6, valueBoxOutput("LGA_Name")),
                           column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
                         ),
                         tags$style(HTML("
-                            .income-box {
-                                margin-left: 400px;  
-                            }
+                          .income-box {
+                            margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
+                          }
                         ")),
-                        fluidRow(
-                          column(width = 12, 
-                                 leafletOutput("map", height = "50vh")
-                          )
-                        ),
-                        fluidRow(
-                          column(width = 12, 
-                                 div(id = "tableauVizContainer" ,style = "height:700px"),
-                                 uiOutput("embedTableauViz")
-                          )
-                        ),
+                        leafletOutput("map", height = "100vh"),
                         tags$div(
                           style = "position: absolute; top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                           selectInput("data_choice", "Select Data:", 
                                       choices = c("Mean Income" = "Mean $",
                                                   "Median Income" = "Median $",
                                                   "Gini Coefficient" = "Gini coefficient coef.",
-                                                  "Number of Earners" = "Earners (persons)")
-                          )
+                                                  "Number of Earners" = "Earners (persons)"))
                         ),
                         tags$div(
-                          style = "position: absolute; left: 50px; top: 30%; transform: translateY(-50%); z-index: 1000; width: 350px; height: 200px;",
+                          style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px;",
                           plotlyOutput("barplot")
                         )
                       )
              ),
-             tabPanel("Population and Road development",
-                      
-                      # Population content
+             tabPanel("Melbourne's Housing & Population Study",
+                      div(id = "tableauVizContainer", style = "height:500px;"),
+                      uiOutput("embedTableauViz")
+             ),
+             tabPanel("Road infrastructure development",
+                      div(id = "tableauVizRoad", style = "height:500px;"),
+                      uiOutput("embedTableauVizRoad")
+             ),
+             tabPanel("Population",
                       fluidPage(
-                        leafletOutput("birth_rate_map", height = "60vh"),
+                        leafletOutput("birth_rate_map", height = "100vh"),
                         absolutePanel(top = 100, left = 40,
                                       selectInput(
                                         "year", "Select Year:", 
@@ -228,32 +223,23 @@ ui <- fluidPage(
                                                   selected = unique(age_sex_male_data$LGA.name)[1])
                         ),
                         tags$script('
-                            $(document).ready(function() {
-                                // Make the absolute panel draggable
-                                $("#draggablePanel").draggable({
-                                    containment: "parent" // Restrict movement to the parent container
-                                });
-                            });
-                        '),
-                        absolutePanel( 
-                          top = 240,     # Position from the top of the page (in pixels)
-                          left = 40,    # Position from the left of the page (in pixels)
-                          width = 300,   # Width of the panel (in pixels)
-                          height = 280,  # Height of the panel (in pixels)
-                          
-                          # Render a plot within the absolute panel
-                          plotOutput("genderAgePlot")
-                        ),
-                        
-                        # Separator or Divider (optional, you can adjust the style as needed)
-                        hr(style = "border-top: 1px solid #ccc;"),
-                        
-                        # Road infrastructure development content
-                        div(id = "tableauVizRoad", style = "height:500px;"),
-                        uiOutput("embedTableauVizRoad")
-                      )       
+                  $(document).ready(function() {
+                  // Make the absolute panel draggable
+                  $("#draggablePanel").draggable({
+                  containment: "parent" // Restrict movement to the parent container
+                   });
+                  '),
+                        absolutePanel( top = 300,     # Position from the top of the page (in pixels)
+                                       left = 40,    # Position from the left of the page (in pixels)
+                                       width = 400,   # Width of the panel (in pixels)
+                                       height = 400,  # Height of the panel (in pixels)
+                                       
+                                       # Render a plot within the absolute panel
+                                       plotOutput("genderAgePlot")
+                        )
+                      )
+                      
              )
-             
   )
 )
 
@@ -352,7 +338,7 @@ server <- function(input, output) {
   
   output$embedTableauViz <- renderUI({
     # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/V2_16977821675040/Dashboard1?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
+    viz_url <- "https://public.tableau.com/views/V2_16977821675040/AnalysisofDwellingsFloorSpaceandPopulationTrendsinMelbourne2021-2041?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
     
     # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
     script <- sprintf('
@@ -362,8 +348,8 @@ server <- function(input, output) {
         var vizUrl = "%s";
         var options = {
           hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "100%%",  // 设置宽度
-          height: "100%%"  // 设置高度
+          width: "1920px",  // 设置宽度
+          height: "1050px"  // 设置高度
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
@@ -387,9 +373,9 @@ server <- function(input, output) {
         var containerDiv = document.getElementById("tableauVizRoad");
         var vizUrl = "%s";
         var options = {
-          hideTabs: true, 
-          width: "100%%",  
-          height: "100%%"  
+          hideTabs: true, // 隐藏 Tableau 选项卡
+          width: "100%%",  // 设置宽度
+          height: "800px"  // 设置高度
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
@@ -401,8 +387,6 @@ server <- function(input, output) {
     # 返回 script
     HTML(script)
   })
-  
-
   
   ################ birth rate and gender age structure ########################
   output$birth_rate_map <- renderLeaflet({
