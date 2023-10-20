@@ -183,7 +183,7 @@ ui <- fluidPage(
                         ),
                         fluidRow(
                           column(width = 12, 
-                                 div(id = "tableauVizContainer" ,style = "height:370px"),
+                                 div(id = "tableauVizContainer" ,style = "height:700px"),
                                  uiOutput("embedTableauViz")
                           )
                         ),
@@ -352,7 +352,7 @@ server <- function(input, output) {
   
   output$embedTableauViz <- renderUI({
     # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/Book1_16968176228800/Dashboard7?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
+    viz_url <- "https://public.tableau.com/views/V2_16977821675040/Dashboard1?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
     
     # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
     script <- sprintf('
