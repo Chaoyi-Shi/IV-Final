@@ -49,8 +49,8 @@ ui <- fluidPage(
     sidebarPanel(
       id = "sideBarPanel",
       selectInput("selected_area", "More Specific Area:", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"]))),
-      girafeOutput("barChart"),
-      girafeOutput("lineChart"),
+      tags$div(class="custom-girafe-output", girafeOutput("barChart")),
+      tags$div(class="custom-girafe-output", girafeOutput("lineChart")),
       girafeOutput("lineChartMelbourneAverage")
     ),
     mainPanel(
@@ -158,7 +158,7 @@ server <- function(input, output,session) {
         plot.title = element_text(color = "white", size = 30),
         legend.position = "none"
       ) +
-      labs(y = NULL, x = NULL, title = paste("Specific Area Average Number of Jobs in Melbourne for", substr(selected_column, 2, 7)))
+      labs(y = NULL, x = NULL, title = ("Specific Area Average Number of Jobs in Melbourne"))
     
     girafe(ggobj = p, width = 15.0, height = 15.51)
   })
@@ -259,8 +259,8 @@ server <- function(input, output,session) {
     numeric_total_data <- apply(melbourne_total_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
     numeric_salary_data <- apply(melbourne_salary_data[,2:6], 2, function(x) as.numeric(gsub("[^0-9]", "", x)))
     
-    # Calculate the yearly average for job numbers and salary
-    avg_job_melbourne <- colMeans(numeric_total_data, na.rm = TRUE)
+    # Calculate the yearly average for job numbers (divided by 10) and salary
+    avg_job_melbourne <- colMeans(numeric_total_data, na.rm = TRUE) / 10
     avg_salary_melbourne <- colMeans(numeric_salary_data, na.rm = TRUE)
     
     # Combine into a single data frame for plotting
@@ -274,7 +274,7 @@ server <- function(input, output,session) {
     p_melbourne_avg <- ggplot(combined_data, aes(x = Year, y = Value, color = Type, group = Type)) +
       geom_line() +
       geom_point() +
-      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 4) +
+      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 5) +
       labs(title = "Average Jobs and Salary in Lga of Melbourne (2015-2019)",
            x = NULL,
            y = "Average value") +
@@ -283,8 +283,8 @@ server <- function(input, output,session) {
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
         text = element_text(color = "white"),
-        axis.text.x = element_text(color = "white", size = 14),
-        axis.text.y = element_text(color = "white", size = 14),
+        axis.text.x = element_text(color = "white", size = 16),
+        axis.text.y = element_text(color = "white", size = 16),
         axis.title = element_text(color = "white"),
         legend.text = element_text(color = "black"),
         legend.title = element_text(color = "black"),
@@ -293,8 +293,9 @@ server <- function(input, output,session) {
       scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "red"))
     
     girafe(ggobj = p_melbourne_avg, width = 9, height = 7)
+    
+    
   })
-  
   
   
   
