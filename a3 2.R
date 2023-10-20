@@ -167,7 +167,7 @@ ui <- fluidPage(
   navbarPage("",
              tabPanel("Income Map", id = "income-map-tab",
                       fluidPage(
-                        leafletOutput("map", height = "100vh"),
+                        #leafletOutput("map", height = "100vh"),
                         tags$div(
                           style = "position: absolute; top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                           selectInput("data_choice", "Select Data:", 
@@ -176,23 +176,13 @@ ui <- fluidPage(
                                                   "Gini Coefficient" = "Gini coefficient coef.",
                                                   "Number of Earners" = "Earners (persons)"))
                         ),
-                        tags$div(
-                          style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px;",
-                          plotlyOutput("barplot")
-                        )
+                        
                       )
              ),
-             tabPanel("Building approved by State",
-                      div(id = "tableauVizContainer", style = "height:500px;"),
-                      uiOutput("embedTableauViz")
-             ),
-             tabPanel("Road infrastructure development",
-                      div(id = "tableauVizRoad", style = "height:500px;"),
-                      uiOutput("embedTableauVizRoad")
-             ),
+             
        tabPanel("Population",
                 fluidPage(
-                  leafletOutput("birth_rate_map", height = "100vh"),
+                  leafletOutput("population_map", height = "100vh"),
                   absolutePanel(top = 100, left = 40,
                                 useShinyjs(),
                                 sliderInput(
@@ -202,20 +192,8 @@ ui <- fluidPage(
                                   value = 2011, # Initial value
                                   step = 1      # Step size (1 year)
                                 ),
-                                actionButton("start_stop", "Start"),
-                                br(),
-                                # LGA selection dropdown
-                                selectInput("lga", "Select LGA:", 
-                                            choices = unique(age_sex_male_data$LGA.name), 
-                                            selected = unique(age_sex_male_data$LGA.name)[1])
+                                actionButton("start_stop", "Start")
                    ),
-                  tags$script('
-                  $(document).ready(function() {
-                  // Make the absolute panel draggable
-                  $("#draggablePanel").draggable({
-                  containment: "parent" // Restrict movement to the parent container
-                   });
-                  '),
                   absolutePanel( top = 400,     # Position from the top of the page (in pixels)
                                  left = 40,    # Position from the left of the page (in pixels)
                                  width = 400,   # Width of the panel (in pixels)
@@ -237,94 +215,12 @@ ui <- fluidPage(
 ################
 
 server <- function(input, output,session) {
-  output$map <- renderLeaflet({
-    # Create a color palette based on user's choice
-    pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
-    
-    leaflet(data = spdf) %>%
-      addProviderTiles(providers$CartoDB.DarkMatter) %>%
-      addPolygons(
-        fillColor = ~ifelse(is.na(spdf[[input$data_choice]]), "gray", pal(spdf[[input$data_choice]])), 
-        fillOpacity = 0.7,  
-        color = "white",
-        weight = 1,
-        popup = paste0("<strong>LGA: </strong>", spdf$`LGA NAME`, 
-                       "<br><strong>", input$data_choice, ": </strong>", spdf[[input$data_choice]])
-      ) %>%
-      addLegend(pal = pal, values = ~spdf[[input$data_choice]], title = input$data_choice, position = "bottomright") 
-  })
-  
-  output$barplot <- renderPlotly({
-    top1 <- merged_data$`Top 1% %`
-    top5 <- merged_data$`Top 5% %`
-    top10 <- merged_data$`Top 10% %`
-    lga_names <- merged_data$`LGA NAME`
-    
-    data <- data.frame(lga_names, top1, top5, top10)
-    
-    plot_ly(data, x = ~lga_names, y = ~top1, type = 'bar', name = 'Top 1%') %>%
-      add_trace(y = ~top5, name = 'Top 5%') %>%
-      add_trace(y = ~top10, name = 'Top 10%') %>%
-      layout(yaxis = list(title = 'Income Percentage'), barmode = 'group')
-  })
-  
-  output$embedTableauViz <- renderUI({
-    # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/Book1_16968176228800/Dashboard3?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
-    
-    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
-    script <- sprintf('
-    <script>
-      function initViz() {
-        var containerDiv = document.getElementById("tableauVizContainer");
-        var vizUrl = "%s";
-        var options = {
-          hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "100%%",  // 设置宽度
-          height: "800px"  // 设置高度
-        };
-        
-        var viz = new tableau.Viz(containerDiv, vizUrl, options);
-      }
-      initViz();
-    </script>
-  ', viz_url)
-    
-    # 返回 script
-    HTML(script)
-  })
-  
-  output$embedTableauVizRoad <- renderUI({
-    # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/Book1_16968176228800/RoadProject?:language=en-GB&:display_count=n&:origin=viz_share_link"
-    
-    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
-    script <- sprintf('
-    <script>
-      function initViz() {
-        var containerDiv = document.getElementById("tableauVizRoad");
-        var vizUrl = "%s";
-        var options = {
-          hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "100%%",  // 设置宽度
-          height: "800px"  // 设置高度
-        };
-        
-        var viz = new tableau.Viz(containerDiv, vizUrl, options);
-      }
-      initViz();
-    </script>
-  ', viz_url)
-    
-    # 返回 script
-    HTML(script)
-  })
   
   ################ birth rate and gender age structure ########################
   current_year <- reactiveVal(2011)
   is_running <- reactiveVal(FALSE)
   
-  auto_increment_timer <- reactiveTimer(5000)  # 5 seconds timer
+  auto_increment_timer <- reactiveTimer(3000)  # 5 seconds timer
   
   observe({
     if (is_running()) {
@@ -360,30 +256,40 @@ server <- function(input, output,session) {
     updateSliderInput(session, "year", value = current_year())
   })
   
-  output$birth_rate_map <- renderLeaflet({
-    target_col <- paste0("X", input$year, "_rate")
-    print(target_col)
+  output$population_map <- renderLeaflet({
+    target_col <- paste0("X", input$year, "_persons")
+    
     pal <- colorNumeric(
       palette = "Blues",
       domain = lga_data[[target_col]]
     )
+    mel_data = lga_data %>%
+       filter(LGA.Name == "MELBOURNE")
     
     leaflet() %>%
       addProviderTiles("CartoDB.DarkMatter") %>%
       addPolygons(
-        data = lga_data,
+        data = mel_data,
         fillColor = ~pal(get(target_col)),
         fillOpacity = 0.7,
         weight = 1,
         color = "white",
-        label = ~paste(LGA.Name, "<br>Birth Rate: ", round(get(target_col), 2))
+        label = ~paste(LGA.Name, "<br>Population: ", get(target_col))
       ) %>%
-      setView(lng = 145, lat = -38, zoom = 6.1) %>%
       addLegend(
         pal = pal,
         values = lga_data[[target_col]],
-        title = "Birth Rate",
+        title = "Population",
         position = "bottomright"
+      )%>%
+      addLabelOnlyMarkers(
+        data = mel_data,
+        lat = ~-37.8136,  # Replace with the actual column name for latitude
+        lng = ~144.9631,  # Replace with the actual column name for longitude
+        label = ~as.character(get(target_col)),
+        labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "28px",
+                                                                "background-color" = "transparent", 
+                                                                "color" = "black"))
       )
   })
   
@@ -392,9 +298,9 @@ server <- function(input, output,session) {
     numeric_part <- input$year
     #print(numeric_part)
     filtered_male <- age_sex_male_data %>%
-      filter(Year == numeric_part, LGA.name == input$lga)
+      filter(Year == numeric_part, LGA.name == "Melbourne")
     filtered_female <- age_sex_female_data %>%
-      filter(Year == numeric_part, LGA.name == input$lga)
+      filter(Year == numeric_part, LGA.name == "Melbourne")
     
     # Combine male and female data sets
     filtered_male$Gender <- "Male"
@@ -428,7 +334,8 @@ server <- function(input, output,session) {
       theme_minimal() +
       theme(legend.position = "bottom",
             panel.spacing.x = unit(0, "pt"),
-            strip.background = element_rect(colour = "black"))
+            panel.background = element_rect(fill = "transparent", color = NA),
+            plot.background = element_rect(fill = "transparent", color = NA))
     
   })
 #################################################################################
