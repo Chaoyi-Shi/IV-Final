@@ -210,7 +210,6 @@ ui <- navbarPage(
                                      "2019-20" = "X2019.20"),
                          selected = "X2019.20")
              
-             
            ),
            absolutePanel(
              top=40, left = 400,
@@ -221,15 +220,15 @@ ui <- navbarPage(
              girafeOutput("rankedLgaChart")
            ),
            absolutePanel(
-             top=100, left = 800, width =400, height= 400,
-             girafeOutput("interactiveBarChart")
+             top=80, left = 800, width =400, height= 350,
+             girafeOutput("spiralBarChart"),
            ),
            absolutePanel(
-             top=450, left = 40, width =600, height= 400,
+             top=500, left = 40, width =600, height= 400,
              girafeOutput("job_pie_chart")
            ),
            absolutePanel(
-             top=450, left = 700, width =600, height= 400,
+             top=500, left = 700, width =500, height= 600,
              girafeOutput("combinedLineChart")
              
            )
@@ -649,9 +648,8 @@ server <- function(input, output,session) {
     all_data <- rbind(adjusted_total_data, combined_data_melbourne)
     
     # --- Plotting ---
-    # --- Plotting ---
     p_combined <- ggplot(all_data, aes(x = Year, y = Value, color = Type, group = interaction(Type, Source))) +
-      geom_line(size = 1) +  # Adjusting size here to make line thinner
+      geom_line(linewidth = 1) +  # Adjusting size here to make line thinner
       geom_point() +
       geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 5) +
       facet_wrap(~ Source, scales = "free_y") +
@@ -660,8 +658,9 @@ server <- function(input, output,session) {
            y = "Average value") +
       theme(
         panel.grid.major = element_blank(),
-        plot.background = element_rect(fill = "black"),
-        panel.background = element_rect(fill = "black"),
+        panel.spacing.x = unit(0, "pt"),
+        panel.background = element_rect(fill = "black", color = NA),
+        plot.background = element_rect(fill = "black", color = NA),
         text = element_text(color = "white"),
         axis.text.x = element_text(color = "white", size = 16),
         axis.text.y = element_text(color = "white", size = 16),
@@ -671,14 +670,15 @@ server <- function(input, output,session) {
         plot.title = element_text(color = "white", size = 20)
       ) +
       scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "lightpink"))
-      girafe(ggobj = p_combined, width = 9, height = 7)
+      girafe(ggobj = p_combined, width = 14, height = 8)
   })
   
-  set3_colors <- brewer.pal(12, "Set3")
+  #set3_colors <- brewer.pal(12, "Spectral")
   pastel1_colors <- brewer.pal(9, "Pastel1")
-  pastel2_colors <- brewer.pal(8, "Pastel2")
-  combined_palette <- c(set3_colors, pastel1_colors, pastel2_colors[1:7])  # We need 7 colors from Pastel2 to get a total of 19
-  
+  #pastel2_colors <- brewer.pal(8, "Pastel2")
+ 
+  spectral_colors <- brewer.pal(11, "Spectral")
+  combined_palette <- c(spectral_colors, pastel1_colors)  
   output$job_pie_chart <- renderGirafe({
     selected_data <- industry_data[industry_data$Area == input$selected_area, ]
     selected_data <- na.omit(selected_data)  # Remove rows with NA values
@@ -695,15 +695,19 @@ server <- function(input, output,session) {
       coord_polar(theta = "y") + 
       labs(title = paste("Number of Jobs in different Industry in 2019"), 
            x = NULL, y = NULL) +
-      theme_void() +
+      theme_minimal() +
       theme(
         legend.position = "left",
-        plot.background = element_rect(fill = "black"),
-        panel.background = element_rect(fill = "black"),
+        panel.spacing.x = unit(0, "pt"),
+        panel.spacing.y = unit(0, "pt"),
+        panel.grid.major = element_blank(),
+        panel.background = element_rect(fill = "black", color = NA),
+        plot.background = element_rect(fill = "black", color = NA),
         legend.text = element_text(color = "white", size = 25),
-        plot.title = element_text(color = "white",size= 25)
+        plot.title = element_text(color = "white",size= 25),
       ) +
       scale_fill_manual(values = combined_palette)
+    
     
     girafe(ggobj = p, width = 16, height = 9, 
            options = list(
@@ -714,8 +718,7 @@ server <- function(input, output,session) {
            ))
   })
   
-  
-  output$interactiveBarChart <- renderGirafe({
+  output$spiralBarChart <- renderGirafe({
     # Obtain the selected year from the input
     selected_column <- input$selectedYear
     
@@ -736,8 +739,10 @@ server <- function(input, output,session) {
                                    tooltip = tooltip_info, data_id = Area, fill = Area)) +
       geom_bar_interactive(stat = "identity") +
       coord_polar(start = 0) +
-      scale_fill_viridis_d() +
+      scale_fill_brewer(palette = "Spectral") + 
+      theme_minimal()+
       theme(
+        panel.spacing.x = unit(0, "pt"),
         axis.text.x = element_text(angle = 45, hjust = 1, size = 25, face = "bold", color = "white"),
         axis.ticks.y = element_blank(),
         axis.text.y = element_blank(),
@@ -747,13 +752,12 @@ server <- function(input, output,session) {
         axis.text = element_text(color = "white"),
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
-        panel.border = element_blank(),
         plot.title = element_text(color = "white", size = 30),
         legend.position = "none"
       ) +
-      labs(y = NULL, x = NULL, title = ("Specific Area Average Number of Jobs in Melbourne"))
+      labs(y = NULL, x = NULL, title = "Specific Area Average Number of Jobs in Melbourne")
     
-    girafe(ggobj = p, width = 10, height = 10)
+    girafe(ggobj = p, width = 12.0, height = 12.51)
   })
   
   selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
