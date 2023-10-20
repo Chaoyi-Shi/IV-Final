@@ -57,8 +57,8 @@ centroids <- gCentroid(spdf, byid=TRUE)
 ##################
 # USER INTERFACE #
 ##################
-
-ui <- fluidPage(
+ui <- navbarPage(
+  theme = bslib::bs_theme(bootswatch = "sketchy"),
   tags$script(src = "https://public.tableau.com/javascripts/api/tableau-2.min.js"),
   tags$style(HTML("
                   @import url('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap');
@@ -114,25 +114,6 @@ ui <- fluidPage(
     /* Add more custom styles as needed */
     }
     
-    /* Custom CSS for the Shiny navbar */
-    .navbar {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 200px;
-      z-index: 1000;
-      background-color: #333; /* Background color */
-      color: #fff; /* Text color */
-      border-bottom: 1px solid #555; /* Border at the bottom */
-      border-radius: 5px; /* Add rounded corners */
-    }
-     /* Add a hover effect */
-   .navbar:hover {
-    background-color: #555;
-    color: #fff;
-    border-bottom: 1px solid #777;
-   }
-  }
 
   /* Style links on hover */
   .navbar a:hover {
@@ -156,76 +137,59 @@ ui <- fluidPage(
  }
     
   ")),
-  navbarPage("",
-             tabPanel("Income Map", id = "income-map-tab",
-                      fluidPage(
-                        fluidRow(
-                          column(width = 4, valueBoxOutput("LGA_Name"), div(class = "income-box", valueBoxOutput("Income")))
-                        ),
-                        tags$style(HTML("
-                          .income-box {
-                            margin-left: 40px;  
-                          }
-                        ")),
-                        leafletOutput("income_map", height = "80vh"),
-                        tags$div(
-                          style = "position: absolute; top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
-                          selectInput("data_choice", "Select Data:", 
-                                      choices = c("Mean Income" = "Mean $",
-                                                  "Median Income" = "Median $",
-                                                  "Gini Coefficient" = "Gini coefficient coef.",
-                                                  "Number of Earners" = "Earners (persons)"))
-                        ),
-                        absolutePanel(top = 50,    
-                                      left = 50,    
-                                      width = 600,   
-                                      height = 500,  
-                                      plotlyOutput("melbourne_pie")
-                                      ),
-                        absolutePanel(top = 100,    
-                                      left = 700,    
-                                      width = 600,   
-                                      height = 500,  
-                                      plotlyOutput("barplot") 
-                        ),
-                      )
-                   
-             ),
-             tabPanel("Melbourne's Housing & Population Study",
-                      div(id = "tableauVizContainer", style = "height:500px;"),
-                      uiOutput("embedTableauViz")
-             ),
-             tabPanel("Population",
-                      fluidPage(
-                        absolutePanel(top = 50,     # Position from the top of the page (in pixels)
-                                      left = 650,    # Position from the left of the page (in pixels)
-                                      width = 600,   # Width of the panel (in pixels)
-                                      height = 500,  # Height of the panel (in pixels)
-                                      leafletOutput("population_map", height = "90vh")),
-                        absolutePanel(top = 50, left = 40,
-                                      useShinyjs(),
-                                      sliderInput(
-                                        "year", "Select Year:",
-                                        min = 2011,   # Minimum year value
-                                        max = 2021,   # Maximum year value
-                                        value = 2011, # Initial value
-                                        step = 1      # Step size (1 year)
-                                      ),
-                                      actionButton("start_stop", "Start The Animation")
-                        ),
-                        absolutePanel( top = 220,     # Position from the top of the page (in pixels)
-                                       left = 40,    # Position from the left of the page (in pixels)
-                                       width = 550,   # Width of the panel (in pixels)
-                                       height = 650,  # Height of the panel (in pixels)
-                                       
-                                       # Render a plot within the absolute panel
-                                       plotlyOutput("genderAgePlot")
-                        )
-                      )
-                      
+  id='myPage',
+  title="City of Melbourne's Population and Socioeconomic Development",
+    tabPanel("Income Map", id = "income-map-tab",
+             fluidPage(
+               fluidRow(
+                 column(width = 4, valueBoxOutput("LGA_Name"), 
+                        div(class = "income-box", valueBoxOutput("Income"))
+                 )
+               ),
+               tags$style(HTML("
+               .income-box {
+                 margin-left: 40px;  
+               }
+             ")),
+               leafletOutput("income_map", height = "80vh"),
+               tags$div(
+                 style = "position: absolute; top: 70px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
+                 selectInput("data_choice", "Select Data:", 
+                             choices = c("Mean Income" = "Mean $",
+                                         "Median Income" = "Median $",
+                                         "Gini Coefficient" = "Gini coefficient coef.",
+                                         "Number of Earners" = "Earners (persons)")
+                 )
+               ),
+               absolutePanel(top = 50, left = 50, width = 600, height = 500, plotlyOutput("melbourne_pie")),
+               absolutePanel(top = 100, left = 700, width = 600, height = 500, plotlyOutput("barplot"))
              )
-  )
+    ),
+    
+    # Melbourne's Housing & Population Study Tab
+    tabPanel("Melbourne's Housing & Population Study",
+             div(id = "tableauVizContainer", style = "height:500px;"),
+             uiOutput("embedTableauViz")
+    ),
+    
+    # Population Tab
+    tabPanel("Population",
+             fluidPage(
+               absolutePanel(top = 70, left = 650, width = 600, height = 500, leafletOutput("population_map", height = "90vh")),
+               absolutePanel(top = 70, left = 40,
+                             useShinyjs(),
+                             sliderInput(
+                               "year", "Select Year:",
+                               min = 2011, max = 2021, value = 2011, step = 1
+                             ),
+                             actionButton("start_stop", "Start The Animation")
+               ),
+               absolutePanel(top = 220, left = 40, width = 550, height = 650, plotlyOutput("genderAgePlot"))
+             )
+    )
+
 )
+
 
 
 
@@ -495,7 +459,7 @@ server <- function(input, output,session) {
         var options = {
           hideTabs: true, // 隐藏 Tableau 选项卡
           width: "1920px",  // 设置宽度
-          height: "1050px"  // 设置高度
+          height: "940px"  // 设置高度
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
