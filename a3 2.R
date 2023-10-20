@@ -61,47 +61,47 @@ centroids <- gCentroid(spdf, byid=TRUE)
 ui <- fluidPage(
   tags$script(src = "https://public.tableau.com/javascripts/api/tableau-2.min.js"),
   tags$style(HTML("
-    @import url('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap');
-    body {
-      background-color: black;
-      color: white;
-      font-family: 'Yusei Magic', sans-serif;
-    }
-    
-    /* Custom CSS for the selectInput sidebar */
-    .selectize-control.single .selectize-input {
-        background-color: #787878 !important; /* Background color */
-        color: white !important; /* Text color */
-        border: 1px solid #555 !important; /* Border */
-        /* Add more custom styles as needed */
-    }
-      
-    .selectize-control.single {
-      background-color:  #787878; /* Background color */
-      border: 1px solid #333; /* Border color */
-      color: white; /* Text color */
-      box-shadow: none; /* Remove shadow (if any) */
-    }
-    
-    /* Custom CSS for the options dropdown */
-    .selectize-dropdown {
-      background-color:  #787878; /* Dropdown background color */
-      border: 1px solid #333; /* Dropdown border color */
-    }
-    
-    /* Custom CSS for the selected option */
-    .selectize-dropdown-content .option {
-      color: white; /* Option text color */
-      background-color:  #787878;
-    }
-  
-    /* Custom CSS for the selected option when hovered */
-    .selectize-dropdown-content .option.hover {
-      background-color:  #787878; /* Background color on hover */
-      color: white; /* Option text color */
-    }
-    
-    /* Custom CSS for the selected option's text and remove button */
+                  @import url('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap');
+                  body {
+                    background-color: black;
+                    color: white;
+                    font-family: 'Yusei Magic', sans-serif;
+                  }
+                  
+                  /* Custom CSS for the selectInput sidebar */
+                    .selectize-control.single .selectize-input {
+                      background-color: #787878 !important; /* Background color */
+                        color: white !important; /* Text color */
+                        border: 1px solid #555 !important; /* Border */
+                      /* Add more custom styles as needed */
+                    }
+                  
+                  .selectize-control.single {
+                    background-color:  #787878; /* Background color */
+                      border: 1px solid #333; /* Border color */
+                    color: white; /* Text color */
+                      box-shadow: none; /* Remove shadow (if any) */
+                  }
+                  
+                  /* Custom CSS for the options dropdown */
+                    .selectize-dropdown {
+                      background-color:  #787878; /* Dropdown background color */
+                        border: 1px solid #333; /* Dropdown border color */
+                    }
+                  
+                  /* Custom CSS for the selected option */
+                    .selectize-dropdown-content .option {
+                      color: white; /* Option text color */
+                        background-color:  #787878;
+                    }
+                  
+                  /* Custom CSS for the selected option when hovered */
+                    .selectize-dropdown-content .option.hover {
+                      background-color:  #787878; /* Background color on hover */
+                        color: white; /* Option text color */
+                    }
+                  
+                  /* Custom CSS for the selected option's text and remove button */
     .selectize-input .item {
       background-color: #444; /* Selected option background color */
       color: white; /* Selected option text color */
@@ -132,14 +132,6 @@ ui <- fluidPage(
     color: #fff;
     border-bottom: 1px solid #777;
    }
-
-  /* Style links within the navbar */
-  .navbar a {
-    text-decoration: none;
-    color: white;
-    display: block;
-    padding: 8px 0;
-    transition: background-color 0.3s ease; /* Add transition for links */
   }
 
   /* Style links on hover */
@@ -163,21 +155,19 @@ ui <- fluidPage(
   color: #ff5733; /* Change to a different color on hover */
  }
     
-    
   ")),
   navbarPage("",
              tabPanel("Income Map", id = "income-map-tab",
                       fluidPage(
                         fluidRow(
-                          column(width = 6, valueBoxOutput("LGA_Name")),
-                          column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
+                          column(width = 4, valueBoxOutput("LGA_Name"), div(class = "income-box", valueBoxOutput("Income")))
                         ),
                         tags$style(HTML("
                           .income-box {
-                            margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
+                            margin-left: 40px;  
                           }
                         ")),
-                        leafletOutput("map", height = "100vh"),
+                        leafletOutput("income_map", height = "80vh"),
                         tags$div(
                           style = "position: absolute; top: 10px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                           selectInput("data_choice", "Select Data:", 
@@ -186,17 +176,20 @@ ui <- fluidPage(
                                                   "Gini Coefficient" = "Gini coefficient coef.",
                                                   "Number of Earners" = "Earners (persons)"))
                         ),
-                        tags$div(
-                          style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px; background-color: rgba(255, 255, 255, 0);", 
-                          plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
-                          plotlyOutput("barplot")         # Selected LGA's pie chart
-                        )
-                        ,
-                        tags$div(
-                          style = "position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 500px;",
-                          plotlyOutput("comparison_plot"),
-                        )
+                        absolutePanel(top = 50,    
+                                      left = 50,    
+                                      width = 600,   
+                                      height = 500,  
+                                      plotlyOutput("melbourne_pie")
+                                      ),
+                        absolutePanel(top = 100,    
+                                      left = 700,    
+                                      width = 600,   
+                                      height = 500,  
+                                      plotlyOutput("barplot") 
+                        ),
                       )
+                   
              ),
              tabPanel("Building approved by State",
                       div(id = "tableauVizContainer", style = "height:500px;"),
@@ -208,41 +201,29 @@ ui <- fluidPage(
              ),
              tabPanel("Population",
                       fluidPage(
-                        leafletOutput("birth_rate_map", height = "100vh"),
-                        absolutePanel(top = 100, left = 40,
-                                      selectInput(
-                                        "year", "Select Year:", 
-                                        choices=c('2011'= 'X2011_rate',
-                                                  '2012'= 'X2012_rate',
-                                                  '2013'= 'X2013_rate',
-                                                  '2014'= 'X2014_rate',
-                                                  '2015'= 'X2015_rate',
-                                                  '2016'= 'X2016_rate',
-                                                  '2017'= 'X2017_rate',
-                                                  '2018'= 'X2018_rate',
-                                                  '2019'= 'X2019_rate',
-                                                  '2020'= 'X2020_rate',
-                                                  '2021'= 'X2021_rate'),
-                                        selected= 'X2021_rate'),
-                                      # LGA selection dropdown
-                                      selectInput("lga", "Select LGA:", 
-                                                  choices = unique(age_sex_male_data$LGA.name), 
-                                                  selected = unique(age_sex_male_data$LGA.name)[1])
+                        absolutePanel(top = 50,     # Position from the top of the page (in pixels)
+                                      left = 650,    # Position from the left of the page (in pixels)
+                                      width = 600,   # Width of the panel (in pixels)
+                                      height = 500,  # Height of the panel (in pixels)
+                                      leafletOutput("population_map", height = "90vh")),
+                        absolutePanel(top = 50, left = 40,
+                                      useShinyjs(),
+                                      sliderInput(
+                                        "year", "Select Year:",
+                                        min = 2011,   # Minimum year value
+                                        max = 2021,   # Maximum year value
+                                        value = 2011, # Initial value
+                                        step = 1      # Step size (1 year)
+                                      ),
+                                      actionButton("start_stop", "Start The Animation")
                         ),
-                        tags$script('
-                  $(document).ready(function() {
-                  // Make the absolute panel draggable
-                  $("#draggablePanel").draggable({
-                  containment: "parent" // Restrict movement to the parent container
-                   });
-                  '),
-                        absolutePanel( top = 300,     # Position from the top of the page (in pixels)
+                        absolutePanel( top = 220,     # Position from the top of the page (in pixels)
                                        left = 40,    # Position from the left of the page (in pixels)
-                                       width = 400,   # Width of the panel (in pixels)
-                                       height = 400,  # Height of the panel (in pixels)
+                                       width = 550,   # Width of the panel (in pixels)
+                                       height = 650,  # Height of the panel (in pixels)
                                        
                                        # Render a plot within the absolute panel
-                                       plotOutput("genderAgePlot")
+                                       plotlyOutput("genderAgePlot")
                         )
                       )
                       
@@ -256,12 +237,12 @@ ui <- fluidPage(
 # SHINY SERVER #
 ################
 
-server <- function(input, output) {
+server <- function(input, output,session) {
   
   # 创建一个reactiveVal存储选定的LGA名字
   selected_LGA <- reactiveVal(NULL)
   
-  output$map <- renderLeaflet({
+  output$income_map <- renderLeaflet({
     # Create a color palette based on user's choice
     pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
     
@@ -396,9 +377,6 @@ server <- function(input, output) {
     )
   })
   
-  
-  
-  
   # Use the selected_LGA reactiveVal in the renderValueBox function
   output$LGA_Name <- renderValueBox({
     valueBox(
@@ -432,94 +410,90 @@ server <- function(input, output) {
     }
   })
   
+  current_year <- reactiveVal(2011)
+  is_running <- reactiveVal(FALSE)
   
-  output$embedTableauViz <- renderUI({
-    # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/Book1_16968176228800/Dashboard3?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
-    
-    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
-    script <- sprintf('
-    <script>
-      function initViz() {
-        var containerDiv = document.getElementById("tableauVizContainer");
-        var vizUrl = "%s";
-        var options = {
-          hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "100%%",  // 设置宽度
-          height: "800px"  // 设置高度
-        };
-        
-        var viz = new tableau.Viz(containerDiv, vizUrl, options);
-      }
-      initViz();
-    </script>
-  ', viz_url)
-    
-    # 返回 script
-    HTML(script)
+  auto_increment_timer <- reactiveTimer(3000)  # 2 seconds timer
+  
+  observe({
+    if (is_running()) {
+      auto_increment_timer()  # Trigger the timer
+    }
   })
   
-  output$embedTableauVizRoad <- renderUI({
-    # 在此处指定 Tableau viz 的 URL
-    viz_url <- "https://public.tableau.com/views/Book1_16968176228800/RoadProject?:language=en-GB&:display_count=n&:origin=viz_share_link"
-    
-    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
-    script <- sprintf('
-    <script>
-      function initViz() {
-        var containerDiv = document.getElementById("tableauVizRoad");
-        var vizUrl = "%s";
-        var options = {
-          hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "100%%",  // 设置宽度
-          height: "800px"  // 设置高度
-        };
-        
-        var viz = new tableau.Viz(containerDiv, vizUrl, options);
-      }
-      initViz();
-    </script>
-  ', viz_url)
-    
-    # 返回 script
-    HTML(script)
+  observeEvent(auto_increment_timer(), {
+    if (is_running() && current_year() < 2021) {
+      current_year(current_year() + 1)
+    } else {
+      is_running(FALSE)
+    }
   })
   
-  ################ birth rate and gender age structure ########################
-  output$birth_rate_map <- renderLeaflet({
-    target_col <- input$year
+  observeEvent(input$year, {
+    if (!is_running()) {
+      current_year(input$year)
+    }
+  })
+  
+  observeEvent(input$start_stop, {
+    if (!is_running() && input$start_stop > 0) {
+      is_running(TRUE)
+      updateActionButton(session, "start_stop", label = "Stop")
+    } else {
+      is_running(FALSE)
+      updateActionButton(session, "start_stop", label = "Start")
+    }
+  })
+  
+  observe({
+    updateSliderInput(session, "year", value = current_year())
+  })
+  
+  output$population_map <- renderLeaflet({
+    target_col <- paste0("X", input$year, "_persons")
+    
     pal <- colorNumeric(
       palette = "Blues",
-      domain = lga_data[[target_col]]
+      domain = c(100000, 180000)
     )
+    mel_data = lga_data %>%
+      filter(LGA.Name == "MELBOURNE")
     
     leaflet() %>%
       addProviderTiles("CartoDB.DarkMatter") %>%
       addPolygons(
-        data = lga_data,
+        data = mel_data,
         fillColor = ~pal(get(target_col)),
         fillOpacity = 0.7,
         weight = 1,
         color = "white",
-        label = ~paste(LGA.Name, "<br>Birth Rate: ", round(get(target_col), 2))
+        label = ~paste(LGA.Name, "<br>Population: ", get(target_col))
       ) %>%
-      setView(lng = 145, lat = -38, zoom = 6.1)%>%
       addLegend(
         pal = pal,
-        values = lga_data[[target_col]],
-        title = "Birth Rate",
+        values = c(100000, 180000),
+        title = "Population",
         position = "bottomright"
+      )%>%
+      addLabelOnlyMarkers(
+        data = mel_data,
+        lat = ~-37.8136,  # Replace with the actual column name for latitude
+        lng = ~144.9631,  # Replace with the actual column name for longitude
+        label = ~as.character(get(target_col)),
+        labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "28px",
+                                                                "background-color" = "transparent", 
+                                                                "color" = "black"))
       )
   })
   
-  output$genderAgePlot <- renderPlot({
+  output$genderAgePlot <- renderPlotly({
     # Using gsub to extract the numeric part
-    numeric_part <- gsub("[^0-9]", "", input$year)
+    numeric_part <- input$year
     #print(numeric_part)
     filtered_male <- age_sex_male_data %>%
-      filter(Year == numeric_part, LGA.name == input$lga)
+      filter(Year == numeric_part, LGA.name == "Melbourne")
     filtered_female <- age_sex_female_data %>%
-      filter(Year == numeric_part, LGA.name == input$lga)
+      filter(Year == numeric_part, LGA.name == "Melbourne")
     
     # Combine male and female data sets
     filtered_male$Gender <- "Male"
@@ -539,21 +513,27 @@ server <- function(input, output) {
     combined_data_long <- combined_data_long %>%
       mutate(Population = ifelse(Gender == "Female", -Population, Population))
     
-    # Create the age-gender pyramid plot with female bars on both sides and sorted age groups
-    ggplot(combined_data_long, aes(x = Age_Group_Sort, y = Population, fill = Gender)) +
-      geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
-      scale_y_continuous(labels = abs, expand = c(0, 0)) +
-      scale_fill_manual(values = c("Male" = "blue", "Female" = "pink"), name = "") +
-      coord_flip() +
-      facet_wrap(. ~ Gender, scale = "free_x", strip.position = "bottom") +
-      labs(title = "Age-Gender Pyramid",
-           x = "Age Group",
-           y = "Population",
-           fill = "Gender") +
-      theme_minimal() +
-      theme(legend.position = "bottom",
-            panel.spacing.x = unit(0, "pt"),
-            strip.background = element_rect(colour = "black"))
+    p <- ggplotly(
+      ggplot(combined_data_long, aes(x = Age_Group_Sort, y = Population, fill = Gender, text = paste("Age Group: ", Age_Group, "<br>Population: ", abs(Population)))) +
+        geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
+        scale_y_continuous(labels = abs, expand = c(0, 0)) +
+        scale_fill_manual(values = c("Male" = "#68b9f7", "Female" = "pink"), name = "") +
+        coord_flip() +
+        facet_wrap(. ~ Gender, scale = "free_x", strip.position = "bottom") +
+        labs(title = "Age-Gender Pyramid",
+             x = "Age Group",
+             y = "Population",
+             fill = "Gender") +
+        theme_minimal() +
+        theme(legend.position = "bottom",
+              panel.spacing.x = unit(0, "pt"),
+              panel.background = element_rect(fill = "transparent", color = NA),
+              plot.background = element_rect(fill = "transparent", color = NA),
+              text = element_text(color = "white"),
+              axis.text.x = element_text(color = "white"),  
+              axis.text.y = element_text(color = "white")   
+        )  
+    )
     
   })
   #################################################################################
