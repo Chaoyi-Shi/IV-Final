@@ -279,8 +279,6 @@ ui <- navbarPage(
 ################
 
 server <- function(input, output,session) {
-  
-  # 创建一个reactiveVal存储选定的LGA名字
   selected_LGA <- reactiveVal(NULL)
   
   output$map <- renderLeaflet({
@@ -322,7 +320,7 @@ server <- function(input, output,session) {
     
     # Render a pie chart for the quartiles
     output$barplot <- renderPlotly({
-      # 如果选择的是“MELBOURNE”，直接返回NULL，不绘制图形
+      # if choose “MELBOURNE”，return none, no plotting
       if (selected_LGA() == "MELBOURNE") {
         return(NULL)
       }
@@ -397,7 +395,7 @@ server <- function(input, output,session) {
   })
   
   output$comparison_plot <- renderPlotly({
-    # 如果未选择任何LGA，则不绘图
+    # no plotting if don't choose any lga
     if (is.null(selected_LGA()) ) {
       return(NULL)
     }
@@ -498,15 +496,20 @@ server <- function(input, output,session) {
     
     pal <- colorNumeric(
       palette = "Blues",
-      domain = c(100000, 180000)
+      domain = c(70000, 180000)
     )
+    sur_data = lga_data %>%
+      filter(LGA.Name %in% c("MELBOURNE", "BOROONDARA","HOBSONS BAY",
+                             "MOONEE VALLEY", "MARIBYRNONG","PORT PHLILLIP",
+                             "BAYSIDE", "GLENEIRA","YARRA","STONNINGTON",
+                             "MORELAND", "DAREBIN"))
     mel_data = lga_data %>%
-      filter(LGA.Name == "MELBOURNE")
+      filter(LGA.Name =="MELBOURNE")
     
     leaflet() %>%
       addProviderTiles("CartoDB.DarkMatter") %>%
       addPolygons(
-        data = mel_data,
+        data = sur_data,
         fillColor = ~pal(get(target_col)),
         fillOpacity = 0.7,
         weight = 1,
@@ -515,7 +518,7 @@ server <- function(input, output,session) {
       ) %>%
       addLegend(
         pal = pal,
-        values = c(100000, 180000),
+        values = c(70000, 180000),
         title = "Population",
         position = "bottomright"
       )%>%
@@ -523,9 +526,9 @@ server <- function(input, output,session) {
         data = mel_data,
         lat = ~-37.8136,  # Replace with the actual column name for latitude
         lng = ~144.9631,  # Replace with the actual column name for longitude
-        label = ~as.character(get(target_col)),
-        labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "28px",
-                                                                "background-color" = "transparent", 
+        label = ~paste("Melbourne Population:", as.character(get(target_col))),
+        labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "16px",
+                                                                "background-color" = "#d9f0fa", 
                                                                 "border" = "2px",
                                                                 "color" = "black"))
       )
@@ -584,14 +587,17 @@ server <- function(input, output,session) {
     combined_data_long <- combined_data_long %>%
       mutate(Population = ifelse(Gender == "Female", -Population, Population))
     
+    pop_range <- range(-180000, 180000)
+    pop_range_seq <- seq(-180000, 180000, by = 4000)
+    
     p <- ggplotly(
       ggplot(combined_data_long, aes(x = Age_Group_Sort, y = Population, fill = Gender, text = paste("Age Group: ", Age_Group, "<br>Population: ", abs(Population)))) +
         geom_bar(stat = "identity", position = position_dodge(width = 0.9)) +
-        scale_y_continuous(labels = abs, expand = c(0, 0)) +
+        scale_y_continuous(labels = abs, expand = c(0, 0), breaks = pop_range_seq) +
         scale_fill_manual(values = c("Male" = "#bbeafc", "Female" = "pink"), name = "") +
         coord_flip() +
         facet_wrap(. ~ Gender, scale = "free_x", strip.position = "bottom") +
-        labs(title = "Age-Gender Pyramid",
+        labs(title = "Age-Gender Pyramid of Melbourne",
              x = "Age Group",
              y = "Population",
              fill = "Gender") +
