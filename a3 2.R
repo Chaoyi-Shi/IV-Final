@@ -209,32 +209,32 @@ ui <- navbarPage(
   ),
   tabPanel("Job & Salary", 
            absolutePanel(
-             style = "top: 7vh; left: 1vw;",
+             style = "top: 6.5vh; left: 1vw;",
              selectInput(inputId = "selectedYear", label = "Select Year", 
-                         choices = c("2016-17" = "X2016.17", 
-                                     "2017-18" = "X2017.18", 
-                                     "2018-19" = "X2018.19", 
-                                     "2019-20" = "X2019.20"),
+                         choices = c("2016-2017" = "X2016.17", 
+                                     "2017-2018" = "X2017.18", 
+                                     "2018-2019" = "X2018.19", 
+                                     "2019-2020" = "X2019.20"),
                          selected = "X2019.20")
            ),
            absolutePanel(
-             style = "top: 7vh; left: 20vw;",
-             selectInput("selected_area", "Area: Statistic. Level 2", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
+             style = "top: 6.5vh; left: 19vw;",
+             selectInput("selected_area", "Area Choose: ", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
            ),
            absolutePanel(
-             style = "top: 15vh; left: 6vw; width: 45vw; height: 45vh;",
+             style = "top: 14vh; left: 5vw; width: 40vw; height: 35vh;",
              girafeOutput("rankedLgaChart")
            ),
            absolutePanel(
-             style = "top: 7vh; left: 44vw; width: 60vw; height: 20vh;",
+             style = "top: 6.8vh; left: 45vw; width: 55vw; height: 13vh;",
              girafeOutput("spiralBarChart")
            ),
            absolutePanel(
-             style = "top: 64vh; left: 6vw; width: 45vw; height: 10vh;",
+             style = "top: 55vh; left: 5vw; width: 40vw; height: 9vh;",
              girafeOutput("job_pie_chart")
            ),
            absolutePanel(
-             style = "top: 64vh; left: 50vw; width: 45vw; height: 10vh;",
+             style = "top: 55vh; left: 50vw; width: 40vw; height: 9vh;",
              girafeOutput("combinedLineChart")
            )
   ),
@@ -547,7 +547,7 @@ server <- function(input, output,session) {
         var options = {
           hideTabs: true, // 隐藏 Tableau 选项卡
           width: "1700px",  // 设置宽度
-          height: "940px"  // 设置高度
+          height: "920px"  // 设置高度
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
