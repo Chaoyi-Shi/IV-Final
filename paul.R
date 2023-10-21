@@ -16,8 +16,6 @@ library(reshape2)
 # Data Pre-Processing and Loading
 ##################################
 
-
-
 ### Salary and jobs data
 industry_data <- read.csv("data/Number of jobs by Industry 2019.csv", header = TRUE)
 industry_data["Area"] = industry_data["X.Area"] 
