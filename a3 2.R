@@ -78,7 +78,7 @@ ui <- navbarPage(
         height: 100%;
         margin: 0;
         padding: 0;
-        overflow: hidden;
+        overflow: scroll;
       }
 
       #scaling-container {
@@ -187,32 +187,37 @@ ui <- navbarPage(
                column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
              ),
              tags$h4("User can click other LGA to get comparison with Melbourne", 
-                     style = "color: white; padding: 10px; text-align: center; margin-top: 20px;"),
+                     style = "color: white; padding: 1vh; text-align: center; margin-top: 2vh;"),
              tags$style(HTML("
-                          .income-box {
-                            margin-left: 400px; 
-                          }
-                        ")),
+                 .income-box {
+                   margin-left: 20.83vw; 
+                 }
+                 ")),
              leafletOutput("map", height = "60vh"),
-             tags$div(
-               style = "position: absolute; top: 70px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
+             absolutePanel(
+               style = "top: 6.48vh; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                selectInput("data_choice", "Select Data:", 
                            choices = c("Mean Income" = "Mean $",
                                        "Median Income" = "Median $",
                                        "Gini Coefficient" = "Gini coefficient coef.",
                                        "Number of Earners" = "Earners (persons)"))
              ),
-             tags$div(
-               style = "position: absolute; left: 140px; top: 34%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px; background-color: rgba(255, 255, 255, 0);", 
-               plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
-               plotlyOutput("pieplot")         # Selected LGA's pie chart
-             )
-             ,
-             tags$div(
-               style = "position: absolute; right: 20px; top: 45%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px;",
-               plotlyOutput("comparison_plot"),
+             
+             absolutePanel(
+               id = "pieChartsPanel", width = "25vw", height = "35vh",
+               style = "left: 10vw; top: 14%; z-index: 1000; background-color: rgba(255, 255, 255, 0);", 
+               plotlyOutput("melbourne_pie", height = "100%", width = "100%"),  
+               plotlyOutput("pieplot", height = "100%", width = "100%")        
+             ),
+             
+             absolutePanel(
+               id = "barChartPanel", width = "25vw", height = "40vh",
+               style = "right: 6vw; top: 25%; z-index: 1000;",
+               plotlyOutput("comparison_plot", height = "100%", width = "100%")
              )
            )
+           
+           
   ),
   
   # Melbourne's Housing & Population Study Tab
@@ -391,7 +396,7 @@ server <- function(input, output,session) {
                    hoverinfo = 'label+percent', 
                    textinfo = 'percent',
                    hoveron = 'points+fills', 
-                   insidetextfont = list(color = 'white')
+                   insidetextfont = list(color = 'white', size = "1vw")
       ) %>%
         layout(title = list(text = "Income Quartile Distribution", x = 0.5, y = 1.05, font = list(size = 14, color = "white")), 
                margin = list(l = 20, r = 20, b = 20, t = 60), 
@@ -404,7 +409,7 @@ server <- function(input, output,session) {
                       xref = 'paper', 
                       yref = 'paper', 
                       showarrow = FALSE, 
-                      font = list(size = 12, color = "white")
+                      font = list(size = "1.2vw", color = "white")
                  )
                ),
                paper_bgcolor = 'rgba(0,0,0,0)',
