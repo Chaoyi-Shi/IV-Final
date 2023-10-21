@@ -152,7 +152,7 @@ ui <- navbarPage(
                column(width = 6, valueBoxOutput("LGA_Name")),
                column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
              ),
-             tags$h3("User can click the LGA to get comparison of two areas", 
+             tags$h3("User can click other LGA to get comparison with Melbourne", 
                      style = "color: white; padding: 10px; text-align: center; margin-top: 20px;"),
              tags$style(HTML("
                           .income-box {
