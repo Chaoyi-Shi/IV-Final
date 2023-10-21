@@ -167,13 +167,13 @@ ui <- navbarPage(
                                        "Number of Earners" = "Earners (persons)"))
              ),
              tags$div(
-               style = "position: absolute; left: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 300px; background-color: rgba(255, 255, 255, 0);", 
+               style = "position: absolute; left: 60px; top: 37%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 300px; background-color: rgba(255, 255, 255, 0);", 
                plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
                plotlyOutput("barplot")         # Selected LGA's pie chart
              )
              ,
              tags$div(
-               style = "position: absolute; right: 10px; top: 50%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 400px;",
+               style = "position: absolute; right: 20px; top: 45%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 400px;",
                plotlyOutput("comparison_plot"),
              )
            )
@@ -188,49 +188,54 @@ ui <- navbarPage(
   # Population Tab
   tabPanel("Population",
            fluidPage(
-             absolutePanel(top = 70, left = 650, width = 600, height = 500, leafletOutput("population_map", height = "90vh")),
-             absolutePanel(top = 70, left = 40,
-                           useShinyjs(),
-                           sliderInput(
-                             "year", "Select Year:",
-                             min = 2011, max = 2021, value = 2011, step = 1
-                           ),
-                           actionButton("start_stop", "Start The Animation")
+             absolutePanel(
+               style = "top: 13vh; left: 45vw; width: 55vw; height: 85vh;",
+               leafletOutput("population_map", height = "100%")
              ),
-             absolutePanel(top = 220, left = 40, width = 550, height = 650, plotlyOutput("genderAgePlot"))
+             absolutePanel(
+               style = "top: 8vh; left: 5vw; width: 35vw;",
+               useShinyjs(),
+               sliderInput(
+                 "year", "Select Year:",
+                 min = 2011, max = 2021, value = 2011, step = 1
+               ),
+               actionButton("start_stop", "Start The Animation")
+             ),
+             absolutePanel(
+               style = "top: 30vh; left: 3vw; width: 35vw; height: 70vh;",
+               plotlyOutput("genderAgePlot", height = "100%")
+             )
            )
   ),
   tabPanel("Job & Salary", 
            absolutePanel(
-             top=60, left = 40,
+             style = "top: 7vh; left: 1vw;",
              selectInput(inputId = "selectedYear", label = "Select Year", 
                          choices = c("2016-17" = "X2016.17", 
                                      "2017-18" = "X2017.18", 
                                      "2018-19" = "X2018.19", 
                                      "2019-20" = "X2019.20"),
                          selected = "X2019.20")
-             
            ),
            absolutePanel(
-             top=40, left = 400,
-             selectInput("selected_area", "More Specific Area: Statistic Area Level 2", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
+             style = "top: 7vh; left: 20vw;",
+             selectInput("selected_area", "Area: Statistic. Level 2", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
            ),
            absolutePanel(
-             top=150, left = 40, width =600, height= 400,
+             style = "top: 15vh; left: 6vw; width: 45vw; height: 45vh;",
              girafeOutput("rankedLgaChart")
            ),
            absolutePanel(
-             top=80, left = 800, width =400, height= 350,
-             girafeOutput("spiralBarChart"),
+             style = "top: 7vh; left: 44vw; width: 60vw; height: 20vh;",
+             girafeOutput("spiralBarChart")
            ),
            absolutePanel(
-             top=500, left = 40, width =600, height= 400,
+             style = "top: 64vh; left: 6vw; width: 45vw; height: 10vh;",
              girafeOutput("job_pie_chart")
            ),
            absolutePanel(
-             top=500, left = 700, width =500, height= 600,
+             style = "top: 64vh; left: 50vw; width: 45vw; height: 10vh;",
              girafeOutput("combinedLineChart")
-             
            )
   ),
   # Define the "About" dropdown menu
@@ -600,6 +605,10 @@ server <- function(input, output,session) {
               axis.text.y = element_text(color = "white")   
         )  
     )
+    p_plotly <- ggplotly(p)
+    
+    # Adjust the layout for size
+    p_plotly <- layout(p_plotly, autosize = F, width = 700, height = 600)
     
   })
   #################################################################################
