@@ -746,7 +746,7 @@ server <- function(input, output,session) {
       scale_fill_manual(values = combined_palette)
     
     
-    girafe(ggobj = p, width = 16, height = 9, 
+    girafe(ggobj = p, width = 16, height = 8.875, 
            options = list(
              tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
              tooltip_offx = 0,
