@@ -230,11 +230,11 @@ ui <- navbarPage(
              girafeOutput("spiralBarChart")
            ),
            absolutePanel(
-             style = "top: 55vh; left: 5vw; width: 40vw; height: 9vh;",
+             style = "top: 58vh; left: 5vw; width: 40vw; height: 9vh;",
              girafeOutput("job_pie_chart")
            ),
            absolutePanel(
-             style = "top: 55vh; left: 50vw; width: 40vw; height: 9vh;",
+             style = "top: 58vh; left: 50vw; width: 40vw; height: 9vh;",
              girafeOutput("combinedLineChart")
            )
   ),
