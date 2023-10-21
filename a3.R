@@ -251,6 +251,7 @@ ui <- navbarPage(
     "About",
     tabPanel(
       "Assingment 3 Description",
+      class = "navbarMenuBackground",
       br(),
       h1(HTML("<b>Assingment 3 Description</b>"), style = "text-align:center"),
       br(),
@@ -285,7 +286,8 @@ ui <- navbarPage(
     tabPanel(
       "About Dataset",
       div(
-        style = "text-align: center; color: white;",  # 设置文本居中并为白色
+        class = "navbarMenuBackground",
+        style = "text-align: center; color: white;",  
         h5("All useful datasets link"),
         a("Income", href="https://www.abs.gov.au/statistics/labour/jobs/jobs-australia/latest-release#data-downloads"),
         br(),
@@ -304,6 +306,13 @@ ui <- navbarPage(
       )
     ),
   ),
+  tags$style(HTML("
+      .navbarMenuBackground {
+        background-image: url('https://fortemag.com.au/wp-content/uploads/2023/04/urlaubstracker-dW8dOC8r7O4-unsplash-scaled-e1681777048898.jpg'); 
+        background-size: cover; 
+        background-repeat: no-repeat;  
+      }
+    ")),
 
   tags$div(
     style = "text-align: center; margin-top: 20px; color: white; position: fixed; bottom: 0; width: 100%; background-color: black; padding: 10px 0;",
