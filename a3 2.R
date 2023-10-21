@@ -169,7 +169,7 @@ ui <- navbarPage(
                                        "Number of Earners" = "Earners (persons)"))
              ),
              tags$div(
-               style = "position: absolute; left: 140px; top: 29%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 300px; background-color: rgba(255, 255, 255, 0);", 
+               style = "position: absolute; left: 140px; top: 34%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px; background-color: rgba(255, 255, 255, 0);", 
                plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
                plotlyOutput("barplot")         # Selected LGA's pie chart
              )
