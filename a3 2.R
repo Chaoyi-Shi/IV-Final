@@ -82,8 +82,8 @@ ui <- navbarPage(
       }
 
       #scaling-container {
-        width: 3456px;
-        height: 2234px;
+        width: 1920px;
+        height: 1080px;
         transform-origin: center center;
         transition: transform 0.2s;
       }
@@ -91,8 +91,8 @@ ui <- navbarPage(
     tags$script(HTML("
       $(document).ready(function(){
         $(window).on('resize', function(){
-            var scaleFactorWidth = window.innerWidth / 3460;
-            var scaleFactorHeight = window.innerHeight / 2234;
+            var scaleFactorWidth = window.innerWidth / 1920;
+            var scaleFactorHeight = window.innerHeight / 1080;
             var scaleFactor = Math.min(scaleFactorWidth, scaleFactorHeight);
             $('#scaling-container').css('transform', 'scale(' + scaleFactor + ')');
         }).trigger('resize');
@@ -187,15 +187,15 @@ ui <- navbarPage(
                column(width = 6, div(class = "income-box", valueBoxOutput("Income")))
              ),
              tags$h4("User can click other LGA to get comparison with Melbourne", 
-                     style = "color: white; padding: 10px; text-align: center; margin-top: 0.89vh;"),
+                     style = "color: white; padding: 10px; text-align: center; margin-top: 20px;"),
              tags$style(HTML("
                           .income-box {
-                            margin-left: 11.57vw; 
+                            margin-left: 400px; 
                           }
                         ")),
              leafletOutput("map", height = "60vh"),
              tags$div(
-               style = "position: absolute; top: 3.13vh; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
+               style = "position: absolute; top: 70px; left: 50%; transform: translate(-50%, 0); z-index: 1000;",
                selectInput("data_choice", "Select Data:", 
                            choices = c("Mean Income" = "Mean $",
                                        "Median Income" = "Median $",
@@ -203,7 +203,7 @@ ui <- navbarPage(
                                        "Number of Earners" = "Earners (persons)"))
              ),
              tags$div(
-               style = "position: absolute; left: 4.05vw; top: 34%; transform: translateY(-50%); z-index: 1000; width: 11.57vw; height: 17vh; background-color: rgba(255, 255, 255, 0);", 
+               style = "position: absolute; left: 140px; top: 34%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px; background-color: rgba(255, 255, 255, 0);", 
                plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
                plotlyOutput("pieplot")         # Selected LGA's pie chart
              )
