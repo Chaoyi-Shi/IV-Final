@@ -599,8 +599,8 @@ server <- function(input, output,session) {
         var vizUrl = "%s";
         var options = {
           hideTabs: true, 
-          width: "1700px",  
-          height: "950px"  
+          width: "100vw",  
+          height: "100vh"  
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
