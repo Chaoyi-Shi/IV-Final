@@ -254,29 +254,50 @@ ui <- navbarPage(
       br(),
       h1(HTML("<b>Assingment2 Description</b>"), style = "text-align:center"),
       br(),
-      span(h4("This project consists of a visualization and analysis of COVID-19 
-            outbreaks throughout the American continent. To begin with, R 
-            libraries were prepared and datasets related to the outbreak were 
-            loaded, including cases of COVID-19 reported from countries across 
-            each continent and deaths reported from US states. Filtering, 
-            summarizing, and grouping the outbreak data were part of the data 
-            processing phase. It is designed with multiple tabs (for example, 
-            distribution of cases by country, intensity and growth rate of the 
-            outbreak, number of deaths by state) for interactive viewing. A 
-            variety of visualizations are dynamically rendered on the Shiny server 
-            side (e.g., bar charts, maps, and line graphs). Furthermore, 
-            the project contains links to data sources and descriptions of the visualizations.")),
+      span(h4("Our project focuses on providing a comprehensive and interactive
+  visualization tool to explore the demographic and socio-economic landscapes
+  of Melbourne and its neighboring regions. By leveraging a series of intuitive 
+  interfaces and charts, our platform offers a deep dive into income distribution, 
+  population forecasts, age-gender pyramids, and job-salary trends within the Melbourne metropolitan area.")),
       br(),
-      img(src = "https://www.psa.org.au/wp-content/uploads/2020/04/CVOID_Cover.png", height = 300, width = 600,class="centered-image"), # 你可以根据需要调整height和width的值
+      span(h4("At its core, our tool aims to empower stakeholders, especially the State Government 
+  Department, with actionable insights into Melbourne's ever-evolving demographic fabric 
+  and economic dynamics. The platform is structured across four main panels, each dedicated to a specific domain:")),
+      br(),
+      span(h4("Income Distribution: A geographically enriched map, complemented by dropdown menus, provides a comparative view of income metrics, such as mean income and Gini Coefficient. This panel elucidates the economic disparities in Melbourne vis-à-vis its neighbors.")),
+      br(),
+      span(h4("Population Forecasts: This segment forecasts Melbourne's population over the next 20 years, detailing age bracket distributions, household structures, and future floor space usage.")),
+      br(),
+      span(h4("Age-Gender Dynamics: An engaging animation traces the evolution of Melbourne's age-gender pyramid over a decade, offering a snapshot of the city's demographic shifts and associated implications.")),
+      br(),
+      span(h4("Job-Salary Landscape: This panel dives into the employment ecosystem of Melbourne, contrasting job numbers, and salary trends in the city against its peripheries.")),
+      br(),
+      span(h4("Color schemes of blue and black lend an authoritative tone to our visuals, while our judicious choice of charts ensures data clarity and user engagement. The collaborative efforts of our diverse team have been instrumental in realizing this tool, as we've integrated a plethora of data sources, design principles, and technological frameworks to craft an insightful and user-friendly platform.")),
+      br(),
+      img(src = "https://www.psa.org.au/wp-content/uploads/2020/04/CVOID_Cover.png", height = 300, width = 600, class="centered-image"),
       tags$style(HTML("
-    .centered-image {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
+.centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
   ")),
+    ),
+    tabPanel(
+      "About Dataset 1",
+      h5("Usability 9.12, file size 975MB"),
+      a("american_continent_covid source Link", href="https://www.kaggle.com/datasets/tavoglc/covid19-in-the-american-continent?search=american&fileType=csv&minUsabilityRating=9.00+or+higher"),
+      br(),
+    ),
+    
+    tabPanel(
+      "About Dataset 2",
+      h5("Usability 10, file size 105MB"),
+      a("Dcovid_death_case_USA source Link", href="https://www.kaggle.com/datasets/fireballbyedimyrnmom/us-counties-covid-19-dataset"),
+      br(),
     )
   ),
+
   tags$div(
     style = "text-align: center; margin-top: 20px; color: white; position: fixed; bottom: 0; width: 100%; background-color: black; padding: 10px 0;",
     "© 2023  City of Melbourne's Population and Socioeconomic Development. All rights reserved."
