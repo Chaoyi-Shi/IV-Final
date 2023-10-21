@@ -759,7 +759,7 @@ server <- function(input, output,session) {
     p_combined <- ggplot(all_data, aes(x = Year, y = Value, color = Type, group = interaction(Type, Source))) +
       geom_line(linewidth = 1.5) +  # Adjusting size here to make line thinner
       geom_point() +
-      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 5) +
+      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 3) +
       facet_wrap(~ Source, scales = "free_y") +
       labs(title = "Average Number of Jobs and Salaries (2015-2019)",
            x = NULL,
@@ -784,7 +784,8 @@ server <- function(input, output,session) {
   
   pastel1_colors <- brewer.pal(9, "Pastel1")
   spectral_colors <- brewer.pal(11, "Spectral")
-  combined_palette <- c(spectral_colors, pastel1_colors)  
+  combined_palette <- c(spectral_colors, pastel1_colors)
+  
   output$job_pie_chart <- renderGirafe({
     selected_data <- industry_data[industry_data$Area == input$selected_area, ]
     selected_data <- na.omit(selected_data)  # Remove rows with NA values
@@ -796,7 +797,7 @@ server <- function(input, output,session) {
     # Create the tooltip_info column with same format as x-axis
     long_data$tooltip_info <- paste("Industry:", gsub("\\.", " ", long_data$variable), "<br>Jobs:", long_data$value)
     
-    p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info, data_id = variable)) +  
+    p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info)) +  
       geom_bar_interactive(stat = "identity", width = 0.6, position = "stack", alpha = 0.7) +  
       coord_polar(theta = "y") + 
       labs(title = paste("Number of Jobs in different Industry"), 
@@ -814,13 +815,11 @@ server <- function(input, output,session) {
       ) +
       scale_fill_manual(values = combined_palette)
     
-    
     girafe(ggobj = p, width = 16, height = 9, 
            options = list(
              tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
              tooltip_offx = 0,
-             hover_opacity = 0.7,  # Highlight the bar when hovered
-             onclick = "function(id){ alert('You clicked on: ' + id); }"  # Display an alert with the clicked bar's id
+             hover_opacity = 1.0  # When hovered, the bar segment will be fully opaque
            ))
   })
   
@@ -842,7 +841,7 @@ server <- function(input, output,session) {
     
     # Plotting
     p <- ggplot(filtered_data, aes(x = Area, y = as.numeric(gsub(",", "", filtered_data[[selected_column]])), 
-                                   tooltip = tooltip_info, data_id = Area, fill = Area)) +
+                                   tooltip = tooltip_info, fill = Area)) +
       geom_bar_interactive(stat = "identity") +
       coord_polar(start = 0) +
       scale_fill_brewer(palette = "Spectral") + 
@@ -862,9 +861,9 @@ server <- function(input, output,session) {
         legend.position = "none"
       ) +
       labs(y = NULL, x = NULL, title = "Specific Area Average Number of Jobs in Melbourne")
-    girafe(ggobj = p, width = 15, height = 15.51)
-  })
-  
+    girafe(ggobj = p, width = 15, height = 15.51, options = list(hover_opacity = 1.0))
+})
+
   selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
                      "Maribyrnong", "Monash", "Melbourne", "Moonee Valley", "Moreland",
                      "Port Phillip", "Stonnington", "Whitehorse", "Yarra")
@@ -882,28 +881,35 @@ server <- function(input, output,session) {
     # Adding tooltip to show number of jobs
     aggregated_data$tooltip_text <- paste(aggregated_data$Lga, ": ", aggregated_data$TotalJobs, " jobs")
     
+    # Assign color to Melbourne or others
+    aggregated_data$fill_color <- ifelse(aggregated_data$Lga == "Melbourne", "lightpink", "#bbeafc")
+    
     p <- ggplot(aggregated_data, aes(x = reorder(Lga, -TotalJobs), 
-                                     y = TotalJobs, tooltip = tooltip_text, data_id = Lga)) + 
-      geom_bar_interactive(stat = "identity", aes(fill = ifelse(Lga == "Melbourne", "Melbourne", "Others"))) +  # Conditional fill with tooltips
-      scale_fill_manual(values = c("Melbourne" = "lightpink", "Others" = "#bbeafc")) +  # Manual color assignment for Melbourne
+                                     y = TotalJobs, tooltip = tooltip_text)) +  # Removed data_id from aes()
+      geom_bar_interactive(stat = "identity", aes(fill = fill_color)) +
+      scale_fill_identity() +  # Use the fill colors directly without mapping
       labs(y = "Total Number of Jobs", x = "LGA", title = "Average Number of Jobs in Melbourne and surrounding LGA") +
       theme_minimal() +
       theme(
         text = element_text(color = "white"),
         axis.title = element_text(color = "white"),
         axis.text = element_text(color = "white"),
-        axis.text.x = element_text(angle = 45, hjust = 1, color = "white"), # Rotate x-axis labels by 45 degrees
+        axis.text.x = element_text(angle = 45, hjust = 1, color = "white"), 
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
-        panel.grid.major = element_blank(),  # Remove major grid
-        panel.grid.minor = element_blank(),  # Remove minor grid
-        panel.border = element_rect(fill=NA, color="black"),  # Add border
-        legend.position = "none"  # Remove legend
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_rect(fill=NA, color="black"),
+        legend.position = "none"
       )
     
     girafe(ggobj = p, width = 8, height = 4)
-    
   })
+  
+
+  
+  
+  
 }
 
 
