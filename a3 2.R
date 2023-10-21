@@ -146,7 +146,7 @@ ui <- navbarPage(
   ")),
   id='myPage',
   title="City of Melbourne's Population and Socioeconomic Development",
-  tabPanel("Income Map", id = "income-map-tab",
+  tabPanel("Income", id = "income-map-tab",
            fluidPage(
              fluidRow(
                column(width = 6, valueBoxOutput("LGA_Name")),
@@ -156,7 +156,7 @@ ui <- navbarPage(
                      style = "color: white; padding: 10px; text-align: center; margin-top: 20px;"),
              tags$style(HTML("
                           .income-box {
-                            margin-left: 400px;  /* 调整这个值来增加或减少偏移量 */
+                            margin-left: 400px; 
                           }
                         ")),
              leafletOutput("map", height = "70vh"),
@@ -171,18 +171,18 @@ ui <- navbarPage(
              tags$div(
                style = "position: absolute; left: 140px; top: 34%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px; background-color: rgba(255, 255, 255, 0);", 
                plotlyOutput("melbourne_pie"),  # Melbourne's pie chart
-               plotlyOutput("barplot")         # Selected LGA's pie chart
+               plotlyOutput("pieplot")         # Selected LGA's pie chart
              )
              ,
              tags$div(
-               style = "position: absolute; right: 20px; top: 45%; transform: translateY(-50%); z-index: 1000; width: 300px; height: 400px;",
+               style = "position: absolute; right: 20px; top: 45%; transform: translateY(-50%); z-index: 1000; width: 400px; height: 400px;",
                plotlyOutput("comparison_plot"),
              )
            )
   ),
   
   # Melbourne's Housing & Population Study Tab
-  tabPanel(" Housing & Population Study",
+  tabPanel(" Housing & Population",
            div(id = "tableauVizContainer", style = "height:500px;"),
            uiOutput("embedTableauViz")
   ),
@@ -213,10 +213,10 @@ ui <- navbarPage(
            absolutePanel(
              style = "top: 6.5vh; left: 1vw;",
              selectInput(inputId = "selectedYear", label = "Select Year", 
-                         choices = c("2016-2017" = "X2016.17", 
-                                     "2017-2018" = "X2017.18", 
-                                     "2018-2019" = "X2018.19", 
-                                     "2019-2020" = "X2019.20"),
+                         choices = c("2016" = "X2016.17", 
+                                     "2017" = "X2017.18", 
+                                     "2018" = "X2018.19", 
+                                     "2019" = "X2019.20"),
                          selected = "X2019.20")
            ),
            absolutePanel(
@@ -228,7 +228,7 @@ ui <- navbarPage(
              girafeOutput("rankedLgaChart")
            ),
            absolutePanel(
-             style = "top: 6.8vh; left: 45vw; width: 55vw; height: 13vh;",
+             style = "top: 6.8vh; left: 50vw; width: 25vw; height: 9vh;",
              girafeOutput("spiralBarChart")
            ),
            absolutePanel(
@@ -290,6 +290,17 @@ server <- function(input, output,session) {
   output$map <- renderLeaflet({
     # Create a color palette based on user's choice
     pal <- colorNumeric("Blues", domain = na.omit(spdf[[input$data_choice]]))
+    # Filter only Melbourne data for the label
+    melbourne_data <- spdf[spdf$`LGA NAME` == "Melbourne", ]
+    #print(melbourne_data)
+    
+    myCustomIcon <- makeIcon(
+      iconUrl = "m.png",  
+      iconWidth = 70,                  
+      iconHeight = 26,
+      iconAnchorX = 40,                   
+      iconAnchorY = 15                 
+    )
     
     leaflet(data = spdf) %>%
       addProviderTiles(providers$CartoDB.DarkMatter) %>%
@@ -302,7 +313,13 @@ server <- function(input, output,session) {
         popup = paste0("<strong>LGA: </strong>", spdf$`LGA NAME`, 
                        "<br><strong>", input$data_choice, ": </strong>", 
                        ifelse(is.na(spdf[[input$data_choice]]), "No useful information", spdf[[input$data_choice]]))
-      ) %>%
+      )%>%
+      addMarkers(
+        data = melbourne_data,
+        lat = ~-37.8136, 
+        lng = ~144.9630,
+        icon = myCustomIcon
+      )%>%
       addLegend(pal = pal, values = ~spdf[[input$data_choice]], title = input$data_choice, position = "bottomright") 
   })
   
@@ -311,21 +328,22 @@ server <- function(input, output,session) {
     
     if (!is.na(click_data$id) && !is.null(click_data$id)) {
       
-      # 更新当前选中的LGA名字（不改变之前的功能）
+      # update selected lga
       selected_LGA(click_data$id)
     } else {
       selected_LGA("undefined")
     }
     
-    # 根据selected_LGA()找到对应的行索引
+    # according selected_LGA() find corresponding row index
     row_index <- which(merged_data$`LGA NAME` == selected_LGA())
     
-    # 提取quartile数据
     quartile_data <- merged_data[row_index, c("Lowest Quartile %", "Second Quartile %", "Third Quartile %", "Highest Quartile %")]
     
     
     # Render a pie chart for the quartiles
-    output$barplot <- renderPlotly({
+    output$pieplot <- renderPlotly({
+      # Define a vector of colors you wish to use for your pie slices
+      colors_vector <- c("#45a7ed", "#98cef5", "#f598b4", "#f7cdda") 
       # if choose “MELBOURNE”，return none, no plotting
       if (selected_LGA() == "MELBOURNE") {
         return(NULL)
@@ -335,7 +353,7 @@ server <- function(input, output,session) {
                    values = ~unlist(quartile_data), 
                    type = 'pie', 
                    hole = 0.6,
-                   marker = list(line = list(color = "#FFFFFF", width = 2)), # 白色边框
+                   marker = list(colors = colors_vector, line = list(color = "#FFFFFF", width = 2)),
                    hoverinfo = 'label+percent', 
                    textinfo = 'percent',
                    hoveron = 'points+fills', 
@@ -368,7 +386,7 @@ server <- function(input, output,session) {
     melbourne_data <- merged_data[merged_data$`LGA NAME` == "MELBOURNE", c("Lowest Quartile %", "Second Quartile %", "Third Quartile %", "Highest Quartile %")]
     
     # Define a vector of colors you wish to use for your pie slices
-    colors_vector <- c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00")  # Replace with your desired colors
+    colors_vector <- c("#45a7ed", "#98cef5", "#f598b4", "#f7cdda") 
     
     p <- plot_ly(melbourne_data, 
                  labels = ~names(melbourne_data), 
@@ -406,18 +424,16 @@ server <- function(input, output,session) {
       return(NULL)
     }
     
-    # 提取当前选中的LGA和"Melbourne"
+    # get selected LGA and "Melbourne"
     comparison_data <- merged_data[merged_data$`LGA NAME` %in% c(selected_LGA(), "MELBOURNE"), ]
     
-    # 使用plot_ly创建对比图
     p <- plot_ly(data = comparison_data, x = ~`LGA NAME`, y = ~`Top 1% %`, type = "bar", name = "Top 1%", marker = list(color = "#c5e0fa"))
-    
     p <- p %>% add_trace(y = ~`Top 5% %`, name = "Top 5%", marker = list(color = "#74b3f2"))
-    
     p <- p %>% add_trace(y = ~`Top 10% %`, name = "Top 10%", marker = list(color = "#1887f5"))
     
     p %>% layout(barmode = 'group',
                  title = list(text = "Comparison of Selected LGA and Melbourne", font = list(color = "white")),
+                 legend = list(font = list(color = "white")),
                  xaxis = list(title = "", tickfont = list(color = "white")),
                  yaxis = list(title = "High Income %", tickfont = list(color = "white"),titlefont = list(color = "white")),
                  paper_bgcolor = 'rgba(0,0,0,0)',
@@ -433,18 +449,15 @@ server <- function(input, output,session) {
   })
   
   output$Income <- renderValueBox({
-    # 根据selected_LGA()找到对应的行索引
+    # use selected_LGA()find corresonding row index 
     row_index <- which(spdf@data$`LGA NAME` == selected_LGA())
-    
-    # 如果row_index为空，则直接返回"undefined"
+  
     if(length(row_index) == 0) {
       return(valueBox(paste(input$data_choice, ": undefined"), "Income Selection"))
     }
     
-    # 获取选中LGA在input$data_choice所指定的列中的值
     selected_value <- spdf@data[row_index, as.character(input$data_choice)]
     
-    # 为了确保selected_value是一个单一的值，我们取向量的第一个元素
     selected_value <- selected_value[1]
     
     if (is.na(selected_value)) {
@@ -461,7 +474,7 @@ server <- function(input, output,session) {
   current_year <- reactiveVal(2011)
   is_running <- reactiveVal(FALSE)
   
-  auto_increment_timer <- reactiveTimer(3000)  # 2 seconds timer
+  auto_increment_timer <- reactiveTimer(3000)  # 3 seconds timer
   
   observe({
     if (is_running()) {
@@ -530,8 +543,8 @@ server <- function(input, output,session) {
       )%>%
       addLabelOnlyMarkers(
         data = mel_data,
-        lat = ~-37.8136,  # Replace with the actual column name for latitude
-        lng = ~144.9631,  # Replace with the actual column name for longitude
+        lat = ~-37.8136, 
+        lng = ~144.9631,  
         label = ~paste("Melbourne Population:", as.character(get(target_col))),
         labelOptions = labelOptions(noHide = TRUE, style = list("font-size" = "16px",
                                                                 "background-color" = "#d9f0fa", 
@@ -541,19 +554,19 @@ server <- function(input, output,session) {
   })
   
   output$embedTableauViz <- renderUI({
-    # 在此处指定 Tableau viz 的 URL
+    # Tableau viz URL
     viz_url <- "https://public.tableau.com/views/V2_16977821675040/AnalysisofDwellingsFloorSpaceandPopulationTrendsinMelbourne2021-2041?:language=en-GB&publish=yes&:display_count=n&:origin=viz_share_link"
     
-    # 使用 JavaScript Embedding API 的 initViz 方法嵌入 Tableau viz
+    # use JavaScript Embedding API's initViz method embed Tableau viz
     script <- sprintf('
     <script>
       function initViz() {
         var containerDiv = document.getElementById("tableauVizContainer");
         var vizUrl = "%s";
         var options = {
-          hideTabs: true, // 隐藏 Tableau 选项卡
-          width: "1700px",  // 设置宽度
-          height: "920px"  // 设置高度
+          hideTabs: true, 
+          width: "1700px",  
+          height: "920px"  
         };
         
         var viz = new tableau.Viz(containerDiv, vizUrl, options);
@@ -562,7 +575,6 @@ server <- function(input, output,session) {
     </script>
   ', viz_url)
     
-    # 返回 script
     HTML(script)
   })
   
@@ -610,6 +622,7 @@ server <- function(input, output,session) {
         theme_minimal() +
         theme(legend.position = "bottom",
               panel.spacing.x = unit(0, "pt"),
+              panel.spacing.y = unit(0, "pt"),
               panel.background = element_rect(fill = "transparent", color = NA),
               plot.background = element_rect(fill = "transparent", color = NA),
               text = element_text(color = "white"),
@@ -623,8 +636,7 @@ server <- function(input, output,session) {
     p_plotly <- layout(p_plotly, autosize = F, width = 700, height = 600)
     
   })
-  #################################################################################
-  
+
   # job and salary panel start
   output$combinedLineChart <- renderGirafe({
     
@@ -670,11 +682,11 @@ server <- function(input, output,session) {
     
     # --- Plotting ---
     p_combined <- ggplot(all_data, aes(x = Year, y = Value, color = Type, group = interaction(Type, Source))) +
-      geom_line(linewidth = 1) +  # Adjusting size here to make line thinner
+      geom_line(linewidth = 1.5) +  # Adjusting size here to make line thinner
       geom_point() +
       geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 5) +
       facet_wrap(~ Source, scales = "free_y") +
-      labs(title = "Average Jobs and Salary (2015-2019)",
+      labs(title = "Average Number of Jobs and Salaries (2015-2019)",
            x = NULL,
            y = "Average value") +
       theme(
@@ -683,21 +695,19 @@ server <- function(input, output,session) {
         panel.background = element_rect(fill = "black", color = NA),
         plot.background = element_rect(fill = "black", color = NA),
         text = element_text(color = "white"),
-        axis.text.x = element_text(color = "white", size = 16),
-        axis.text.y = element_text(color = "white", size = 16),
+        axis.text.x = element_text(color = "white", size = 20),
+        axis.text.y = element_text(color = "white", size = 20),
         axis.title = element_text(color = "white"),
-        legend.text = element_text(color = "black"),
-        legend.title = element_text(color = "black"),
-        plot.title = element_text(color = "white", size = 20)
+        legend.text = element_text(color = "black",size = 16),
+        legend.title = element_text(color = "black", size = 16),
+        plot.title = element_text(color = "white", size = 24),
+        strip.text = element_text(size = 20, color = "black")  # Adjusting strip text size and color)
       ) +
       scale_color_manual(values = c("Jobs" = "lightblue", "Salary" = "lightpink"))
       girafe(ggobj = p_combined, width = 14, height = 8)
   })
   
-  #set3_colors <- brewer.pal(12, "Spectral")
   pastel1_colors <- brewer.pal(9, "Pastel1")
-  #pastel2_colors <- brewer.pal(8, "Pastel2")
- 
   spectral_colors <- brewer.pal(11, "Spectral")
   combined_palette <- c(spectral_colors, pastel1_colors)  
   output$job_pie_chart <- renderGirafe({
@@ -714,7 +724,7 @@ server <- function(input, output,session) {
     p <- ggplot(long_data, aes(x = "", y = value, fill = variable, tooltip = tooltip_info, data_id = variable)) +  
       geom_bar_interactive(stat = "identity", width = 0.6, position = "stack", alpha = 0.7) +  
       coord_polar(theta = "y") + 
-      labs(title = paste("Number of Jobs in different Industry in 2019"), 
+      labs(title = paste("Number of Jobs in different Industry"), 
            x = NULL, y = NULL) +
       theme_minimal() +
       theme(
@@ -725,7 +735,7 @@ server <- function(input, output,session) {
         panel.background = element_rect(fill = "black", color = NA),
         plot.background = element_rect(fill = "black", color = NA),
         legend.text = element_text(color = "white", size = 25),
-        plot.title = element_text(color = "white",size= 25),
+        plot.title = element_text(color = "white",size= 25)
       ) +
       scale_fill_manual(values = combined_palette)
     
@@ -777,8 +787,7 @@ server <- function(input, output,session) {
         legend.position = "none"
       ) +
       labs(y = NULL, x = NULL, title = "Specific Area Average Number of Jobs in Melbourne")
-    
-    girafe(ggobj = p, width = 12.0, height = 12.51)
+      girafe(ggobj = p, width = 15, height = 15.51)
   })
   
   selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
@@ -821,9 +830,6 @@ server <- function(input, output,session) {
     
   })
 }
-
-
-
 
 
 #############
