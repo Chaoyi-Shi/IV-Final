@@ -25,7 +25,6 @@ lga_data <- st_transform(lga_data, 4326)
 lga_data <- lga_data[, -(1:11)]
 
 
-
 # Load the birthrate geojson data
 lga_data <- st_read("data/merged_vic_lga.geojson")
 lga_data <- st_transform(lga_data, 4326)
@@ -87,6 +86,7 @@ ui <- navbarPage(
         transition: transform 0.2s;
       }
     ")),
+    # for rescaleing web page
     tags$script(HTML("
       $(document).ready(function(){
         $(window).on('resize', function(){
@@ -179,7 +179,7 @@ ui <- navbarPage(
   "))),
   id='myPage',
   title="City of Melbourne's Population and Socioeconomic Development",
-  tabPanel("Income", id = "income-map-tab",
+  tabPanel(" Income ", id = "income-map-tab",
            fluidPage(
              fluidRow(
                column(width = 6, valueBoxOutput("LGA_Name")),
@@ -220,13 +220,13 @@ ui <- navbarPage(
   ),
   
   # Melbourne's Housing & Population Study Tab
-  tabPanel(" Housing & Population",
+  tabPanel(" Housing ",
            div(id = "tableauVizContainer", style = "height:500px;"),
            uiOutput("embedTableauViz")
   ),
   
   # Population Tab
-  tabPanel("Population",
+  tabPanel(" Population ",
            fluidPage(
              absolutePanel(
                style = "top: 13vh; left: 45vw; width: 55vw; height: 85vh;",
@@ -247,7 +247,7 @@ ui <- navbarPage(
              )
            )
   ),
-  tabPanel("Job & Salary", 
+  tabPanel(" Job & Salary ", 
            absolutePanel(
              style = "top: 6.5vh; left: 1vw;",
              selectInput(inputId = "selectedYear", label = "Select Year", 
@@ -280,7 +280,7 @@ ui <- navbarPage(
   ),
   # Define the "About" dropdown menu
   aboutMenu <- navbarMenu(
-    "About",
+    " About ",
     tabPanel(
       "Assingment 3 Description",
       class = "navbarMenuBackground",
@@ -769,7 +769,7 @@ server <- function(input, output,session) {
         panel.spacing.x = unit(0, "pt"),
         panel.background = element_rect(fill = "black", color = NA),
         plot.background = element_rect(fill = "black", color = NA),
-        text = element_text(color = "white"),
+        text = element_text(color = "white", size = 16),
         axis.text.x = element_text(color = "white", size = 20),
         axis.text.y = element_text(color = "white", size = 20),
         axis.title = element_text(color = "white"),
