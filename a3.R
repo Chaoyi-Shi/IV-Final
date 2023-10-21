@@ -250,9 +250,9 @@ ui <- navbarPage(
   aboutMenu <- navbarMenu(
     "About",
     tabPanel(
-      "Assingment2 Description",
+      "Assingment 3 Description",
       br(),
-      h1(HTML("<b>Assingment2 Description</b>"), style = "text-align:center"),
+      h1(HTML("<b>Assingment 3 Description</b>"), style = "text-align:center"),
       br(),
       span(h4("Our project focuses on providing a comprehensive and interactive
   visualization tool to explore the demographic and socio-economic landscapes
@@ -274,28 +274,35 @@ ui <- navbarPage(
       br(),
       span(h4("Color schemes of blue and black lend an authoritative tone to our visuals, while our judicious choice of charts ensures data clarity and user engagement. The collaborative efforts of our diverse team have been instrumental in realizing this tool, as we've integrated a plethora of data sources, design principles, and technological frameworks to craft an insightful and user-friendly platform.")),
       br(),
-      img(src = "https://www.psa.org.au/wp-content/uploads/2020/04/CVOID_Cover.png", height = 300, width = 600, class="centered-image"),
       tags$style(HTML("
-.centered-image {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .centered-image {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
   ")),
     ),
     tabPanel(
-      "About Dataset 1",
-      h5("Usability 9.12, file size 975MB"),
-      a("american_continent_covid source Link", href="https://www.kaggle.com/datasets/tavoglc/covid19-in-the-american-continent?search=american&fileType=csv&minUsabilityRating=9.00+or+higher"),
-      br(),
+      "About Dataset",
+      div(
+        style = "text-align: center; color: white;",  # 设置文本居中并为白色
+        h5("All useful datasets link"),
+        a("Income", href="https://www.abs.gov.au/statistics/labour/jobs/jobs-australia/latest-release#data-downloads"),
+        br(),
+        a("Job & Salary", href="https://www.abs.gov.au/methodologies/data-region-methodology/2011-22#list-of-data-items"),
+        br(),
+        a("City of Melbourne Population Forecasts by Small Area 2021-2041", href="https://discover.data.vic.gov.au/dataset/city-of-melbourne-population-forecasts-by-small-area-2021-2041"),
+        br(),
+        a("City of Melbourne Floor Space Forecasts by Small Area 2021-2041", href="https://discover.data.vic.gov.au/dataset/city-of-melbourne-floor-space-forecasts-by-small-area-2021-2041"),
+        br(),
+        a("City of Melbourne Dwellings and Household Forecasts by Small Area 2021-2041", href="https://discover.data.vic.gov.au/dataset/city-of-melbourne-dwellings-and-household-forecasts-by-small-area-2021-2041"),
+        br(),
+        a("Regional population by age and sex", href="https://www.abs.gov.au/statistics/people/population/regional-population-age-and-sex/latest-release"),
+        br(),
+        a("Births, Australia", href="https://www.abs.gov.au/statistics/people/population/births-australia/latest-release"),
+        br()
+      )
     ),
-    
-    tabPanel(
-      "About Dataset 2",
-      h5("Usability 10, file size 105MB"),
-      a("Dcovid_death_case_USA source Link", href="https://www.kaggle.com/datasets/fireballbyedimyrnmom/us-counties-covid-19-dataset"),
-      br(),
-    )
   ),
 
   tags$div(
