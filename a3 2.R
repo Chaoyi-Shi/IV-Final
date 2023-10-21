@@ -64,8 +64,14 @@ salary_data <- read.csv("data/Income By Gender and area.csv", header = TRUE)
 ##################
 # USER INTERFACE #
 ##################
+  
 ui <- navbarPage(
   theme = bslib::bs_theme(bootswatch = "sketchy"),
+  tags$head(
+    tags$meta(charset="utf-8"),
+    tags$title("City of Melbourne's Population and Socioeconomic Development"),
+    tags$meta(name="viewport", content="width=device-width, initial-scale=1.0")
+  ),
   tags$script(src = "https://public.tableau.com/javascripts/api/tableau-2.min.js"),
   tags$style(HTML("
                   @import url('https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap');
