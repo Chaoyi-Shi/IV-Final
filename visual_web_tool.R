@@ -262,11 +262,11 @@ ui <- navbarPage(
              selectInput("selected_area", "Area Choose: ", choices = sort(unique(industry_data$Area[industry_data$Lga == "Melbourne"])))
            ),
            absolutePanel(
-             style = "top: 14vh; left: 5vw; width: 40vw; height: 35vh;",
+             style = "top: 16vh; left: 5vw; width: 40vw; height: 35vh;",
              girafeOutput("rankedLgaChart")
            ),
            absolutePanel(
-             style = "top: 6.8vh; left: 50vw; width: 25vw; height: 9vh;",
+             style = "top: 7.8vh; left: 50vw; width: 25vw; height: 9vh;",
              girafeOutput("spiralBarChart")
            ),
            absolutePanel(
@@ -274,7 +274,7 @@ ui <- navbarPage(
              girafeOutput("job_pie_chart")
            ),
            absolutePanel(
-             style = "top: 58vh; left: 50vw; width: 40vw; height: 9vh;",
+             style = "top: 58vh; left: 45vw; width: 55vw; height: 9vh;",
              girafeOutput("combinedLineChart")
            )
   ),
@@ -759,7 +759,7 @@ server <- function(input, output,session) {
     p_combined <- ggplot(all_data, aes(x = Year, y = Value, color = Type, group = interaction(Type, Source))) +
       geom_line(linewidth = 1.5) +  # Adjusting size here to make line thinner
       geom_point() +
-      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 3) +
+      geom_text(aes(label = round(Value, 2)), vjust = -0.5, size = 3.8) +
       facet_wrap(~ Source, scales = "free_y") +
       labs(title = "Average Number of Jobs and Salaries (2015-2019)",
            x = NULL,
@@ -815,7 +815,7 @@ server <- function(input, output,session) {
       ) +
       scale_fill_manual(values = combined_palette)
     
-    girafe(ggobj = p, width = 16, height = 9, 
+    girafe(ggobj = p, width = 16.02, height = 8.885, 
            options = list(
              tooltip_offy = -50,  # Adjust tooltip position to appear in the hole
              tooltip_offx = 0,
@@ -857,11 +857,11 @@ server <- function(input, output,session) {
         axis.text = element_text(color = "white"),
         plot.background = element_rect(fill = "black"),
         panel.background = element_rect(fill = "black"),
-        plot.title = element_text(color = "white", size = 30),
+        plot.title = element_text(color = "white", size = 40),
         legend.position = "none"
       ) +
       labs(y = NULL, x = NULL, title = "Specific Area Average Number of Jobs in Melbourne")
-    girafe(ggobj = p, width = 15, height = 15.51, options = list(hover_opacity = 1.0))
+    girafe(ggobj = p, width = 15, height = 15.7, options = list(hover_opacity = 1.0))
 })
 
   selected_lgas <- c("Banyule", "Bayside", "Boroondara", "Darebin", "Glen Eira", 
